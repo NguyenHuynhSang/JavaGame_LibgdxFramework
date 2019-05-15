@@ -1,0 +1,41 @@
+package com.nhs.game.Sprites;
+
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+
+import static com.nhs.game.Global.global.PPM;
+
+
+public abstract class InteractiveTileObject {
+    protected World world;
+    protected TiledMap map;
+    protected TiledMapTile tile;
+    protected Rectangle bbox;
+    protected Body body;
+
+
+    public  InteractiveTileObject(World world,TiledMap map,Rectangle bbox)
+    {
+        this.world=world;
+        this.map=map;
+        this.bbox=bbox;
+        BodyDef bdef=new BodyDef();
+        FixtureDef fdef=new FixtureDef();
+        PolygonShape shape=new PolygonShape();
+
+        bdef.type=BodyDef.BodyType.StaticBody; // like bricks,ground nói chung là mấy object k di chuyển đc
+        bdef.position.set((bbox.getX()+bbox.getWidth()/2)/PPM,(bbox.getY()+bbox.getHeight()/2)/PPM);
+
+        body=world.createBody(bdef);
+
+        shape.setAsBox((bbox.getWidth()/2)/PPM,(bbox.getHeight()/2)/PPM);
+        fdef.shape=shape;
+        body.createFixture(fdef);
+    }
+}

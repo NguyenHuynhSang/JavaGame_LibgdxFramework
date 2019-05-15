@@ -1,4 +1,4 @@
-package com.nhs.game.Screens.Global;
+package com.nhs.game.Global;
 
 public class global {
 

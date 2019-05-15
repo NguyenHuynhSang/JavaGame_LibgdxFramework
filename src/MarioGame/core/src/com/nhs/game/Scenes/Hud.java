@@ -6,13 +6,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.graphics.Color;
-import static com.nhs.game.Screens.Global.global._height;
-import static com.nhs.game.Screens.Global.global._width;
 
-public class Hud {
+
+import static com.nhs.game.Global.global._height;
+import static com.nhs.game.Global.global._width;
+
+public class Hud implements Disposable {
     public Stage stage;
     private Viewport viewport; // dùng 1 cam khác để lock hud tránh trường hợp hub "bị bỏ lại" khi game cam thay đổi
 
@@ -27,7 +30,7 @@ public class Hud {
     Label worldLable;
     Label marioLable;
 
-    public Hud(SpriteBatch spriteBatch)
+    public Hud (SpriteBatch spriteBatch)
     {
         worldTimer=300;
         timeCount=0;
@@ -65,4 +68,8 @@ public class Hud {
     }
 
 
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }
