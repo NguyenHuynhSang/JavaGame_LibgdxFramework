@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.nhs.game.Scenes.Hud;
 import com.nhs.game.Sprites.Mario;
 import com.nhs.game.Tools.B2WorldCreator;
+import com.nhs.game.Tools.WorldContactListener;
 import com.nhs.game.mariobros;
 
 import static com.nhs.game.Global.global.PPM;
@@ -57,7 +58,7 @@ public class PlayScreen implements Screen {
         hud=new Hud(game.batch);
 
         mapLoader=new TmxMapLoader();
-        map=mapLoader.load("maplv1-1.tmx");
+        map=mapLoader.load("level1.tmx");
         renderer=new OrthogonalTiledMapRenderer(map,1/PPM);
         gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
         world=new World(new Vector2(0,-10),true);// "true" is make an object sleeping
@@ -68,7 +69,7 @@ public class PlayScreen implements Screen {
         new B2WorldCreator(world,map);
 
 
-
+        world.setContactListener(new WorldContactListener());
 
 
     }
@@ -113,6 +114,8 @@ public class PlayScreen implements Screen {
         handleInput(dt);
         world.step(1/50f,6,2);
         player.Update(dt);
+        hud.Update(dt);
+        if (player.b2body.getPosition().x>_width/2/PPM)
         gameCam.position.x=player.b2body.getPosition().x;
         gameCam.update();
         renderer.setView(gameCam);// set vi tri ve map
@@ -133,7 +136,7 @@ public class PlayScreen implements Screen {
         //draw hud riêng vì hud k chạy theo cam world
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
-        player.draw(game.batch);
+        player.draw(game.batch); //draw mario to the screen
         game.batch.end(); //close the box and draw it to the screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();

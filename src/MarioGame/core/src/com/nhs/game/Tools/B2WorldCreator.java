@@ -28,7 +28,7 @@ public class B2WorldCreator {
 
 
         //create body for ground
-        for (MapObject object : map.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)){ //get the ground object in tilemap
+        for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){ //get the ground object in tilemap
             Rectangle rec=((RectangleMapObject) object).getRectangle();
             bdef.type=BodyDef.BodyType.StaticBody; // like bricks,ground nói chung là mấy object k di chuyển đc
             bdef.position.set((rec.getX()+rec.getWidth()/2)/PPM,(rec.getY()+rec.getHeight()/2)/PPM);
@@ -40,21 +40,21 @@ public class B2WorldCreator {
             body.createFixture(fdef);
         }
         //create body for brick
-        for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
+        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
             Rectangle rec=((RectangleMapObject) object).getRectangle();
             new Bricks(world,map,rec);
         }
 
 
         //create body for coins
-        for (MapObject object : map.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
+        for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
             Rectangle rec=((RectangleMapObject) object).getRectangle();
             new Coins(world,map,rec);
         }
 
 
         //create body for pipes
-        for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
+        for (MapObject object : map.getLayers().get(6).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
             Rectangle rec=((RectangleMapObject) object).getRectangle();
             bdef.type=BodyDef.BodyType.StaticBody; // like bricks,ground nói chung là mấy object k di chuyển đc
             bdef.position.set((rec.getX()+rec.getWidth()/2)/PPM,(rec.getY()+rec.getHeight()/2)/PPM);

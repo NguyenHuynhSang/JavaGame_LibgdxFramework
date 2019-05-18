@@ -3,14 +3,22 @@ package com.nhs.game.Sprites;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.mariobros;
 
+import static com.nhs.game.Global.global.BRICK_BIT;
+import static com.nhs.game.Global.global.COINS_BIT;
+import static com.nhs.game.Global.global.DEFAULT_BIT;
+import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.PPM;
 
 public class Mario extends Sprite {
@@ -53,7 +61,7 @@ public class Mario extends Sprite {
 
 
         marioStand=new TextureRegion(getTexture(),0,10,16,16);
-        setBounds(0,0,16/PPM,16/PPM);
+        setBounds(0,0,16/PPM,14/PPM);
         setRegion(marioStand);
 
     }
@@ -61,7 +69,7 @@ public class Mario extends Sprite {
 
     public  void Update(float dt)
     {
-        setPosition(this.b2body.getPosition().x-getWidth()/2,this.b2body.getPosition().y-getHeight()/3);
+        setPosition(this.b2body.getPosition().x-getWidth()/2,this.b2body.getPosition().y-getHeight()/2);
         setRegion(getFrame(dt));
     }
 
@@ -121,12 +129,30 @@ public class Mario extends Sprite {
         bdef.type=BodyDef.BodyType.DynamicBody;
         b2body=world.createBody(bdef);
         FixtureDef fdef=new FixtureDef();
-        CircleShape share=new CircleShape();
-        share.setRadius(5/PPM);
+        CircleShape shape=new CircleShape();
+        //PolygonShape shape=new PolygonShape();
+        //shape.setAsBox(16/2/PPM,16/2/PPM);
+        shape.setRadius(6/PPM);
 
-        fdef.shape=share;
+        // mỗi fixture có category và mask riêng
+        // category để nhận biết đó là object nào
+        // mask là các object và object đang xét có thể va chạm
+        fdef.filter.categoryBits=MARIO_BIT;
+        fdef.filter.maskBits=DEFAULT_BIT| COINS_BIT |BRICK_BIT;
+
+        fdef.shape=shape;
 
         b2body.createFixture(fdef);
+
+
+        //Create sensor call head to check the collision between mario's head and brick or coins,stuffs...
+
+        EdgeShape head=new EdgeShape();
+        head.set(new Vector2(-2/PPM,6/PPM ),new Vector2(2/PPM,6/PPM ));
+        fdef.shape=head;
+        fdef.isSensor=true;
+        b2body.createFixture(fdef).setUserData("head");
+
 
     }
 
