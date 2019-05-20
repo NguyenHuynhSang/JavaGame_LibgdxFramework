@@ -9,16 +9,16 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Screens.PlayScreen;
-import com.nhs.game.mariobros;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
-import static com.nhs.game.Global.global.DEFAULT_BIT;
+import static com.nhs.game.Global.global.ENERMY_BIT;
+import static com.nhs.game.Global.global.GROUND_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
+import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
 
 public class Mario extends Sprite {
@@ -32,10 +32,10 @@ public class Mario extends Sprite {
     private Animation marioJump;
     private float stateTimer;
     private  boolean isRight;
-    public  Mario(World world, PlayScreen screen)
+    public  Mario(PlayScreen screen)
     {
         super(screen.getAtlas().findRegion("little_mario"));
-        this.world=world;
+        this.world=screen.getWorld();
         defineMario();
 
         currentState=State.STANDDING;
@@ -138,7 +138,7 @@ public class Mario extends Sprite {
         // category để nhận biết đó là object nào
         // mask là các object và object đang xét có thể va chạm
         fdef.filter.categoryBits=MARIO_BIT;
-        fdef.filter.maskBits=DEFAULT_BIT| COINS_BIT |BRICK_BIT;
+        fdef.filter.maskBits= GROUND_BIT | COINS_BIT |BRICK_BIT|ENERMY_BIT|OBJECT_BIT;
 
         fdef.shape=shape;
 

@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.nhs.game.Screens.PlayScreen;
 
 import static com.nhs.game.Global.global.PPM;
 
@@ -23,10 +24,10 @@ public abstract class InteractiveTileObject {
     protected Body body;
     protected Fixture fixture;
 
-    public  InteractiveTileObject(World world,TiledMap map,Rectangle bbox)
+    public  InteractiveTileObject(PlayScreen screen, Rectangle bbox)
     {
-        this.world=world;
-        this.map=map;
+        this.world=screen.getWorld();
+        this.map=screen.getMap();
         this.bbox=bbox;
         BodyDef bdef=new BodyDef();
         FixtureDef fdef=new FixtureDef();

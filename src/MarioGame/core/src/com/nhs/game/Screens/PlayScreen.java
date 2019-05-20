@@ -3,6 +3,8 @@ package com.nhs.game.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -15,8 +17,10 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.nhs.game.Scenes.Hud;
+import com.nhs.game.Sprites.Goomba;
 import com.nhs.game.Sprites.Mario;
 import com.nhs.game.Tools.B2WorldCreator;
+import com.nhs.game.Tools.Controller;
 import com.nhs.game.Tools.WorldContactListener;
 import com.nhs.game.mariobros;
 
@@ -30,9 +34,9 @@ public class PlayScreen implements Screen {
     private OrthographicCamera gameCam;
     private Viewport gamePort;
     private Hud hud;
-
+    private Controller controller;
     private TextureAtlas atlas;
-
+    private Music music;
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
@@ -46,8 +50,18 @@ public class PlayScreen implements Screen {
     //dynamics object
 
     private Mario player;
+    private Goomba goomba;
 
+    public  TiledMap getMap()
+    {
+        return  map;
+    }
 
+    public World getWorld()
+    {
+        return  world;
+
+    }
 
     public  PlayScreen(mariobros game){
         atlas=new TextureAtlas("Mario_and_Enemies.pack");
@@ -64,14 +78,19 @@ public class PlayScreen implements Screen {
         world=new World(new Vector2(0,-10),true);// "true" is make an object sleeping
 
         b2dr=new Box2DDebugRenderer();
-        player=new Mario(world,this);
 
-        new B2WorldCreator(world,map);
+        controller = new Controller();
+
+        player=new Mario(this);
+
+        new B2WorldCreator(this);
 
 
         world.setContactListener(new WorldContactListener());
-
-
+        music=mariobros.manager.get("audio/music/mario_music.ogg",Music.class);
+        music.setLooping(true);
+        music.play();
+        goomba=new Goomba(this,.32f,.32f);
     }
 
     public  TextureAtlas   getAtlas()
@@ -89,21 +108,42 @@ public class PlayScreen implements Screen {
     public  void handleInput(float dt)
     {
 
-       // if (Gdx.input.isTouched())  gameCam.position.x+=100*dt;
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.b2body.getLinearVelocity().y==0)
+        if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0)
         {
             player.b2body.applyLinearImpulse(new Vector2(0,3.8f),player.b2body.getWorldCenter(),true);
+            mariobros.manager.get("audio/sounds/jump.wav",Sound.class).play();
         }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) &&player.b2body.getLinearVelocity().x<=1.2)
+        if (controller.isRightPressed()&& player.b2body.getLinearVelocity().x<=1.2)
         {
             player.b2body.applyLinearImpulse(new Vector2(0.1f,0),player.b2body.getWorldCenter(),true);
         }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x>=-1.2)
+        if (controller.isLeftPressed()&& player.b2body.getLinearVelocity().x>=-1.2)
         {
             player.b2body.applyLinearImpulse(new Vector2(-0.1f,0),player.b2body.getWorldCenter(),true);
         }
+
+
+
+
+
+       // if (Gdx.input.isTouched() &&player.b2body.getLinearVelocity().x<=1.2)  {
+        //    player.b2body.applyLinearImpulse(new Vector2(0.1f,0),player.b2body.getWorldCenter(),true);
+        //}
+        //if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.b2body.getLinearVelocity().y==0)
+        //{
+         //   player.b2body.applyLinearImpulse(new Vector2(0,3.8f),player.b2body.getWorldCenter(),true);
+         //   mariobros.manager.get("audio/sounds/jump.wav",Sound.class).play();
+        //}
+
+        //if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) &&player.b2body.getLinearVelocity().x<=1.2)
+        //{
+        //    player.b2body.applyLinearImpulse(new Vector2(0.1f,0),player.b2body.getWorldCenter(),true);
+        //}
+        //
+        //if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x>=-1.2)
+        //{
+        //    player.b2body.applyLinearImpulse(new Vector2(-0.1f,0),player.b2body.getWorldCenter(),true);
+       // }
 
 
 
@@ -114,6 +154,7 @@ public class PlayScreen implements Screen {
         handleInput(dt);
         world.step(1/50f,6,2);
         player.Update(dt);
+        goomba.Update(dt);
         hud.Update(dt);
         if (player.b2body.getPosition().x>_width/2/PPM)
         gameCam.position.x=player.b2body.getPosition().x;
@@ -137,16 +178,18 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
         player.draw(game.batch); //draw mario to the screen
+        goomba.draw(game.batch);
         game.batch.end(); //close the box and draw it to the screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
-
+        controller.draw();
     }
 
     @Override
     public void resize(int width, int height)
     {
      gamePort.update(width,height);
+        controller.resize(width, height);
     }
 
     @Override

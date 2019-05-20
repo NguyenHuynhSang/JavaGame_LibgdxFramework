@@ -1,3 +1,13 @@
+
+allprojects {
+    repositories {
+        // The order in which you list these repositories matter.
+        google()
+        jcenter()
+    }
+}
+
+
 android {
     buildToolsVersion "28.0.3"
     compileSdkVersion 28

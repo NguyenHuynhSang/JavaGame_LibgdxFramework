@@ -1,3 +1,14 @@
+
+allprojects {
+    repositories {
+        // The order in which you list these repositories matter.
+        google()
+        jcenter()
+    }
+}
+
+
+
 apply plugin: "java"
 
 sourceCompatibility = 1.6
