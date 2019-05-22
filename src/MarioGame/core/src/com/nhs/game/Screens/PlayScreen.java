@@ -13,8 +13,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.nhs.game.Object.Enermy;
+import com.nhs.game.Object.Items.Item;
+import com.nhs.game.Object.Items.ItemDef;
+import com.nhs.game.Object.Items.Mushroom;
 import com.nhs.game.UiManager.Hud;
 import com.nhs.game.Object.Goomba;
 import com.nhs.game.Object.Mario;
@@ -23,8 +28,13 @@ import com.nhs.game.Engine.Controller;
 import com.nhs.game.Engine.WorldContactListener;
 import com.nhs.game.mariobros;
 
+import java.util.PriorityQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import static com.nhs.game.Global.global.PPM;
 import static com.nhs.game.Global.global._height;
+import static com.nhs.game.Global.global._mapWidth;
+import static com.nhs.game.Global.global._mapWidthX2;
 import static com.nhs.game.Global.global._width;
 
 public class PlayScreen implements Screen {
@@ -39,6 +49,7 @@ public class PlayScreen implements Screen {
     private TmxMapLoader mapLoader;
     private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
+    private  B2WorldCreator creator;
 
 
     //box 2d variables
@@ -46,10 +57,13 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer b2dr;
 
 
+
     //dynamics object
 
     private Mario player;
-    private Goomba goomba;
+
+    private Array<Item> items;
+    private LinkedBlockingQueue<ItemDef> itemstoSpawn;
 
     public  TiledMap getMap()
     {
@@ -82,14 +96,33 @@ public class PlayScreen implements Screen {
 
         player=new Mario(this);
 
-        new B2WorldCreator(this);
+        creator=new B2WorldCreator(this);
 
 
         world.setContactListener(new WorldContactListener());
         music=mariobros.manager.get("audio/music/mario_music.ogg",Music.class);
         music.setLooping(true);
         music.play();
-        goomba=new Goomba(this,5.64f,.16f );
+
+        items=new Array<Item>();
+        itemstoSpawn=new LinkedBlockingQueue<ItemDef>();
+
+    }
+
+
+    public  void spawnItem(ItemDef itemDef){
+        itemstoSpawn.add(itemDef);
+    }
+
+    public  void handleSpawningItem(){
+        if (!itemstoSpawn.isEmpty()){
+            ItemDef idef=itemstoSpawn.poll();
+            if (idef.type==Mushroom.class){
+                items.add(new Mushroom(this,idef.position.x,idef.position.y));
+
+            }
+        }
+
     }
 
     public  TextureAtlas   getAtlas()
@@ -153,11 +186,22 @@ public class PlayScreen implements Screen {
     public  void Update(float dt)
     {
         handleInput(dt);
+        handleSpawningItem();
         world.step(1/50f,6,2);
         player.Update(dt);
-        goomba.Update(dt);
+        for (Enermy e:creator.getGoombas())
+        {
+            e.update(dt);
+            if (e.getX()< gameCam.position.x+224/PPM)
+                e.b2body.setActive(true);
+        }
+
+        for (Item item:items)
+        {
+            item.update(dt);
+        }
         hud.Update(dt);
-        if (player.b2body.getPosition().x>_width/2/PPM)
+        if (player.b2body.getPosition().x>(_mapWidth+_width/2)/PPM&&player.b2body.getPosition().x<(_mapWidthX2-_width/2)/PPM)
         gameCam.position.x=player.b2body.getPosition().x;
         gameCam.update();
         renderer.setView(gameCam);// set vi tri ve map
@@ -179,7 +223,15 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
         player.draw(game.batch); //draw mario to the screen
-         goomba.draw(game.batch);
+        for (Enermy e:creator.getGoombas())
+        {
+          //  e.draw(game.batch);
+
+        }
+        for (Item item:items)
+        {
+            item.draw(game.batch);
+        }
         game.batch.end(); //close the box and draw it to the screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();

@@ -17,11 +17,14 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.nhs.game.Object.Enermy;
 import com.nhs.game.Object.GameObject;
+import com.nhs.game.Object.Items.Item;
 import com.nhs.game.Object.Mario;
 
+import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.ENERMY_BIT;
 import static com.nhs.game.Global.global.ENERMY_HEAD_BIT;
 import static com.nhs.game.Global.global.GROUND_BIT;
+import static com.nhs.game.Global.global.ITEM_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.OBJECT_BIT;
 
@@ -60,13 +63,37 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Enermy)fixtureB.getUserData()).reverseVelocity(true,false);
                 break;
+            case ENERMY_BIT|BRICK_BIT:
+                if (fixtureA.getFilterData().categoryBits==ENERMY_BIT)
+                    ((Enermy)fixtureA.getUserData()).reverseVelocity(true,false);
+                else
+                    ((Enermy)fixtureB.getUserData()).reverseVelocity(true,false);
+                break;
             case MARIO_BIT|ENERMY_BIT:
             {
                 Gdx.app.log("Mario","died!! \n");
 
-            }
+            }       break;
 
+            case ITEM_BIT|OBJECT_BIT:
+                if (fixtureA.getFilterData().categoryBits==ITEM_BIT)
+                    ((Item)fixtureA.getUserData()).reverseVelocity(true,false);
+                else
+                    ((Item)fixtureB.getUserData()).reverseVelocity(true,false);
+                break;
+            case ITEM_BIT|MARIO_BIT:
+                if (fixtureA.getFilterData().categoryBits==ITEM_BIT)
+                {
+                    ((Item)fixtureA.getUserData()).useItem((Mario)fixtureB.getUserData());
 
+                }
+
+                else
+                {
+                    ((Item)fixtureB.getUserData()).useItem((Mario)fixtureA.getUserData());
+                }
+
+                break;
 
         }
 

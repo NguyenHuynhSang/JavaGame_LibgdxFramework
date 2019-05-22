@@ -18,14 +18,18 @@ public abstract class Enermy extends Sprite {
         this.screen=screen;
         setPosition(x,y);
         defineEnermy();
-        velocity=new Vector2(1,0);
+        velocity=new Vector2(0.5f,0.0f);
+        b2body.setActive(false);
     }
+
+
 
 
     protected abstract void defineEnermy();
 
-
+    public abstract  void update(float dt);
     public   abstract void hitOnHead();
+
 
     //đảo ngược chiều của vận tốc
     public void reverseVelocity(boolean x,boolean  y){

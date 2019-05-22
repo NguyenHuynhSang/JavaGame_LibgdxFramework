@@ -1,5 +1,7 @@
 package com.nhs.game.Object;
 
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -23,12 +25,15 @@ public abstract class GameObject {
     protected Rectangle bbox;
     protected Body body;
     protected Fixture fixture;
-
-    public GameObject(PlayScreen screen, Rectangle bbox)
+    protected PlayScreen screen;
+    protected MapObject object;
+    public GameObject(PlayScreen screen, MapObject object)
     {
+        this.object=object;
+        this.screen=screen;
         this.world=screen.getWorld();
         this.map=screen.getMap();
-        this.bbox=bbox;
+        this.bbox=((RectangleMapObject)object).getRectangle();
         BodyDef bdef=new BodyDef();
         FixtureDef fdef=new FixtureDef();
         PolygonShape shape=new PolygonShape();

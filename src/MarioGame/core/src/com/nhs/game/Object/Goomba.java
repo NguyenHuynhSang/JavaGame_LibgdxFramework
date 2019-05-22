@@ -52,7 +52,7 @@ public class Goomba extends  Enermy
 
     }
 
-    public void Update(float dt)
+    public void update(float dt)
     {
         stateTime+=dt;
         if (setDestroy && !Destroyed)
@@ -65,10 +65,13 @@ public class Goomba extends  Enermy
         } else if (!Destroyed)
         {
 
-            b2body.setLinearVelocity(velocity);
+
             setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-getHeight()/2);
 
             setRegion( (TextureRegion)wallAnimation.getKeyFrame(stateTime,true));
+
+            velocity.y=b2body.getLinearVelocity().y;
+            b2body.setLinearVelocity(velocity);
 
         }
 
@@ -110,7 +113,7 @@ public class Goomba extends  Enermy
         head.set(vertice);
 
         fdef.shape=head;
-        fdef.restitution=0.5f; //mario bi day lai mot chut khi nhay len dau goomba
+        fdef.restitution=0.5f; //mario bi day la i mot chut khi nhay len dau goomba
         fdef.filter.categoryBits=ENERMY_HEAD_BIT;
 
         //set mask de goi lai trong collision
