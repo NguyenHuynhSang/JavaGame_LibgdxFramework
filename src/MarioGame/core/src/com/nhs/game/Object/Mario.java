@@ -1,4 +1,4 @@
-package com.nhs.game.Sprites;
+package com.nhs.game.Object;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,7 +16,9 @@ import com.nhs.game.Screens.PlayScreen;
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
 import static com.nhs.game.Global.global.ENERMY_BIT;
+import static com.nhs.game.Global.global.ENERMY_HEAD_BIT;
 import static com.nhs.game.Global.global.GROUND_BIT;
+import static com.nhs.game.Global.global.MAP_BOUND_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
@@ -32,6 +34,8 @@ public class Mario extends Sprite {
     private Animation marioJump;
     private float stateTimer;
     private  boolean isRight;
+    public  boolean hitGround;
+
     public  Mario(PlayScreen screen)
     {
         super(screen.getAtlas().findRegion("little_mario"));
@@ -63,7 +67,7 @@ public class Mario extends Sprite {
         marioStand=new TextureRegion(getTexture(),0,10,16,16);
         setBounds(0,0,16/PPM,14/PPM);
         setRegion(marioStand);
-
+        hitGround=false;
     }
 
 
@@ -138,7 +142,7 @@ public class Mario extends Sprite {
         // category để nhận biết đó là object nào
         // mask là các object và object đang xét có thể va chạm
         fdef.filter.categoryBits=MARIO_BIT;
-        fdef.filter.maskBits= GROUND_BIT | COINS_BIT |BRICK_BIT|ENERMY_BIT|OBJECT_BIT;
+        fdef.filter.maskBits= GROUND_BIT | COINS_BIT |BRICK_BIT|ENERMY_BIT|OBJECT_BIT|ENERMY_HEAD_BIT;
 
         fdef.shape=shape;
 

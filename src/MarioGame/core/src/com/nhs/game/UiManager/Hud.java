@@ -1,4 +1,4 @@
-package com.nhs.game.Scenes;
+package com.nhs.game.UiManager;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

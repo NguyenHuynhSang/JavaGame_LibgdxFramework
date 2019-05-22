@@ -1,20 +1,17 @@
-package com.nhs.game.Sprites;
+package com.nhs.game.Object;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
-import com.nhs.game.Scenes.Hud;
+import com.nhs.game.UiManager.Hud;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
 
 import static com.nhs.game.Global.global.COINS_BIT;
 
 
-public class Coins extends  InteractiveTileObject {
+public class Coins extends GameObject {
     private static TiledMapTileSet tileset;
     private  final int BLANK_COIN=94;
 
@@ -34,10 +31,11 @@ public class Coins extends  InteractiveTileObject {
             mariobros.manager.get("audio/sounds/bump.wav",Sound.class).play();
         else
         {
+            Hud.UpdateScore(100);
             mariobros.manager.get("audio/sounds/coin.wav",Sound.class).play();
         }
         getCell().setTile(tileset.getTile(BLANK_COIN));
-        Hud.UpdateScore(100);
+
 
     }
 

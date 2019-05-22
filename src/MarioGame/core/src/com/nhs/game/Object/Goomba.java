@@ -1,21 +1,30 @@
-package com.nhs.game.Sprites;
+package com.nhs.game.Object;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Screens.PlayScreen;
 
 
+import java.util.Vector;
+
+import sun.security.krb5.internal.crypto.Des;
+
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
+import static com.nhs.game.Global.global.ENERMY_HEAD_BIT;
 import static com.nhs.game.Global.global.GROUND_BIT;
 import static com.nhs.game.Global.global.ENERMY_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
+import static com.nhs.game.UiManager.Hud.UpdateScore;
 
 public class Goomba extends  Enermy
 {
@@ -23,7 +32,8 @@ public class Goomba extends  Enermy
     private float stateTime;
     private Animation wallAnimation;
     private com.badlogic.gdx.utils.Array<TextureRegion> frames;
-
+    private boolean setDestroy;
+    private boolean Destroyed;
     public Goomba(PlayScreen screen, float x, float y) {
         super(screen, x, y);
 
@@ -36,14 +46,33 @@ public class Goomba extends  Enermy
         wallAnimation=new Animation(0.4f,frames);
         stateTime=0;
         setBounds(getX(),getY(),16/PPM,16/PPM);
+        setDestroy=false;
+        Destroyed=false;
+
+
     }
 
     public void Update(float dt)
     {
         stateTime+=dt;
-        setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-getHeight()/2);
+        if (setDestroy && !Destroyed)
+        {
+            world.destroyBody(b2body);
+            Destroyed=true;
+            setRegion(new TextureRegion(screen.getAtlas().findRegion("goomba"),32,0,16,16));
+            stateTime=0;
 
-        setRegion( (TextureRegion)wallAnimation.getKeyFrame(stateTime,true));
+        } else if (!Destroyed)
+        {
+
+            b2body.setLinearVelocity(velocity);
+            setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-getHeight()/2);
+
+            setRegion( (TextureRegion)wallAnimation.getKeyFrame(stateTime,true));
+
+        }
+
+
 
 
     }
@@ -51,7 +80,7 @@ public class Goomba extends  Enermy
     @Override
     protected void defineEnermy() {
         BodyDef bdef=new BodyDef();
-        bdef.position.set(100/PPM,32/PPM);
+        bdef.position.set(getX(),getY());
         bdef.type=BodyDef.BodyType.DynamicBody;
         b2body=world.createBody(bdef);
         FixtureDef fdef=new FixtureDef();
@@ -68,7 +97,44 @@ public class Goomba extends  Enermy
 
         fdef.shape=shape;
 
-        b2body.createFixture(fdef);
+        b2body.createFixture(fdef).setUserData(this);
 
+        //create the head here
+
+        PolygonShape head=new PolygonShape();
+        Vector2[] vertice=new Vector2[4];
+        vertice[0]=new Vector2(-5,8).scl(1/PPM);
+        vertice[1]=new Vector2(5,8).scl(1/PPM);
+        vertice[2]=new Vector2(-3,3).scl(1/PPM);
+        vertice[3]=new Vector2(3,3).scl(1/PPM);
+        head.set(vertice);
+
+        fdef.shape=head;
+        fdef.restitution=0.5f; //mario bi day lai mot chut khi nhay len dau goomba
+        fdef.filter.categoryBits=ENERMY_HEAD_BIT;
+
+        //set mask de goi lai trong collision
+        b2body.createFixture(fdef).setUserData(this);
+
+
+
+
+
+
+
+
+    }
+
+    public  void draw(Batch batch){
+        if (!Destroyed ||stateTime<1)
+            super.draw(batch);
+
+    }
+
+    @Override
+    public void hitOnHead() {
+        //xóa b2body của goomba để k xét va chạm nữa
+        setDestroy=true;
+        UpdateScore(100);
     }
 }

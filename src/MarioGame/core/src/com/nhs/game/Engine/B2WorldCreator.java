@@ -1,4 +1,4 @@
-package com.nhs.game.Tools;
+package com.nhs.game.Engine;
 
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -9,14 +9,18 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.nhs.game.Object.MapBound;
 import com.nhs.game.Screens.PlayScreen;
-import com.nhs.game.Sprites.Bricks;
-import com.nhs.game.Sprites.Coins;
+import com.nhs.game.Object.Bricks;
+import com.nhs.game.Object.Coins;
 
 import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
 
 public class B2WorldCreator {
+
+
+
     public B2WorldCreator(PlayScreen screen)
     {
 
@@ -70,6 +74,11 @@ public class B2WorldCreator {
             body.createFixture(fdef);
         }
 
+        //create body for mapbound
+        for (MapObject object : map.getLayers().get(7).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
+            Rectangle rec=((RectangleMapObject) object).getRectangle();
+            new MapBound(screen,rec);
+        }
 
     }
 

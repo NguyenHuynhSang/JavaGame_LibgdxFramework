@@ -1,7 +1,6 @@
 package com.nhs.game.Screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -16,12 +15,12 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.nhs.game.Scenes.Hud;
-import com.nhs.game.Sprites.Goomba;
-import com.nhs.game.Sprites.Mario;
-import com.nhs.game.Tools.B2WorldCreator;
-import com.nhs.game.Tools.Controller;
-import com.nhs.game.Tools.WorldContactListener;
+import com.nhs.game.UiManager.Hud;
+import com.nhs.game.Object.Goomba;
+import com.nhs.game.Object.Mario;
+import com.nhs.game.Engine.B2WorldCreator;
+import com.nhs.game.Engine.Controller;
+import com.nhs.game.Engine.WorldContactListener;
 import com.nhs.game.mariobros;
 
 import static com.nhs.game.Global.global.PPM;
@@ -90,7 +89,7 @@ public class PlayScreen implements Screen {
         music=mariobros.manager.get("audio/music/mario_music.ogg",Music.class);
         music.setLooping(true);
         music.play();
-        goomba=new Goomba(this,.32f,.32f);
+        goomba=new Goomba(this,5.64f,.16f );
     }
 
     public  TextureAtlas   getAtlas()
@@ -110,8 +109,10 @@ public class PlayScreen implements Screen {
 
         if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0)
         {
+
             player.b2body.applyLinearImpulse(new Vector2(0,3.8f),player.b2body.getWorldCenter(),true);
             mariobros.manager.get("audio/sounds/jump.wav",Sound.class).play();
+            player.hitGround=false;
         }
         if (controller.isRightPressed()&& player.b2body.getLinearVelocity().x<=1.2)
         {
@@ -167,7 +168,7 @@ public class PlayScreen implements Screen {
     @Override
     public void render(float delta) {
 
-            Update(delta);
+        Update(delta);
         Gdx.gl.glClearColor(0,0,0,1); //clear the screen to black
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -178,7 +179,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
         player.draw(game.batch); //draw mario to the screen
-        goomba.draw(game.batch);
+         goomba.draw(game.batch);
         game.batch.end(); //close the box and draw it to the screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();

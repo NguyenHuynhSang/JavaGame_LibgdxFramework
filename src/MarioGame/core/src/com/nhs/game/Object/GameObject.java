@@ -1,4 +1,4 @@
-package com.nhs.game.Sprites;
+package com.nhs.game.Object;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -16,7 +16,7 @@ import com.nhs.game.Screens.PlayScreen;
 import static com.nhs.game.Global.global.PPM;
 
 
-public abstract class InteractiveTileObject {
+public abstract class GameObject {
     protected World world;
     protected TiledMap map;
     protected TiledMapTile tile;
@@ -24,7 +24,7 @@ public abstract class InteractiveTileObject {
     protected Body body;
     protected Fixture fixture;
 
-    public  InteractiveTileObject(PlayScreen screen, Rectangle bbox)
+    public GameObject(PlayScreen screen, Rectangle bbox)
     {
         this.world=screen.getWorld();
         this.map=screen.getMap();

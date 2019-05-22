@@ -1,19 +1,16 @@
-package com.nhs.game.Sprites;
+package com.nhs.game.Object;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.physics.box2d.World;
-import com.nhs.game.Scenes.Hud;
+import com.nhs.game.UiManager.Hud;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.DISTROYED_BIT;
 
-public class Bricks extends  InteractiveTileObject {
+public class Bricks extends GameObject {
 
     public Bricks(PlayScreen screen, Rectangle bbox)
     {

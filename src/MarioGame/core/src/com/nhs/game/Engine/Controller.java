@@ -1,9 +1,11 @@
-package com.nhs.game.Tools;
+package com.nhs.game.Engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -32,7 +34,7 @@ public class Controller {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 switch(keycode){
-                    case Input.Keys.UP:
+                    case Input.Keys.SPACE:
                         upPressed = true;
                         break;
                     case Input.Keys.DOWN:
@@ -51,7 +53,7 @@ public class Controller {
             @Override
             public boolean keyUp(InputEvent event, int keycode) {
                 switch(keycode){
-                    case Input.Keys.UP:
+                    case Input.Keys.SPACE:
                         upPressed = false;
                         break;
                     case Input.Keys.DOWN:
@@ -136,27 +138,37 @@ public class Controller {
             }
         });
         Table table = new Table();
+        table.setSize(_width,50);
         table.left().bottom();
+        table.pad(0,300,20,0);
         table.add();
 
         table.add(upImg).size(upImg.getWidth()/2, upImg.getHeight()/2);
 
-        table.add();
-        table.row().pad(1, 1, 1, 1);
-        table.add(leftImg).size(leftImg.getWidth()/2, leftImg.getHeight()/2);
-        table.add();
-        table.add(rightImg).size(rightImg.getWidth()/2, rightImg.getHeight()/2);
-        table.row().padBottom(1);
-        table.add();
-        //table.add(downImg).size(downImg.getWidth()/2, downImg.getHeight()/2);
-        table.add();
 
+
+        Table table1=new Table();
+
+        table1.left().bottom();
+        table1.add();
+        table1.pad(0,0,10,0);
+        table1.add().size(upImg.getWidth()/2, upImg.getHeight()/2);
+        table1.row();
+        table1.add(leftImg).size(rightImg.getWidth()/2, rightImg.getHeight()/2);
+        table1.add();
+        table1.add(rightImg).size(downImg.getWidth()/2, downImg.getHeight()/2);
+        table.row().pad(1, 1, 1, 1);
+        //table.add();
 
         stage.addActor(table);
+        stage.addActor(table1);
+        //stage.setDebugAll(true);
     }
     public void draw(){
+
         stage.draw();
     }
+
 
     public boolean isUpPressed() {
         return upPressed;

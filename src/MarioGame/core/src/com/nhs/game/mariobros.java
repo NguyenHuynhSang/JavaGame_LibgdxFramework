@@ -11,11 +11,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nhs.game.Screens.PlayScreen;
 
+import javax.lang.model.type.NullType;
+
 public class mariobros extends Game {
+
+	private  static  mariobros __instance=null;
 	public SpriteBatch batch; //this things hold all of our image,textures,stuffs...
 
 	public static AssetManager manager;
 
+	public static mariobros getInstance(){
+		if (__instance==null) __instance=new mariobros();
+		return __instance;
+	}
 
 	public  SpriteBatch getBatch(){
 		return batch;
