@@ -19,13 +19,16 @@ import com.nhs.game.Object.Enermy;
 import com.nhs.game.Object.GameObject;
 import com.nhs.game.Object.Items.Item;
 import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.staticObject.Bricks;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
+import static com.nhs.game.Global.global.COINS_BIT;
+import static com.nhs.game.Global.global.DEADZONE_BIT;
 import static com.nhs.game.Global.global.ENERMY_BIT;
 import static com.nhs.game.Global.global.ENERMY_HEAD_BIT;
-import static com.nhs.game.Global.global.GROUND_BIT;
 import static com.nhs.game.Global.global.ITEM_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
+import static com.nhs.game.Global.global.MARIO_HEAD_BIT;
 import static com.nhs.game.Global.global.OBJECT_BIT;
 
 public class WorldContactListener implements ContactListener {
@@ -37,20 +40,29 @@ public class WorldContactListener implements ContactListener {
         Fixture fixtureB=contact.getFixtureB();
 
         int cDef=fixtureA.getFilterData().categoryBits|fixtureB.getFilterData().categoryBits;
-        if (fixtureA.getUserData()=="head" || fixtureB.getUserData()=="head" )
-        {
-            Fixture head=fixtureA.getUserData()=="head"?fixtureA:fixtureB;
-            Fixture object=head==fixtureA?fixtureB:fixtureA;
-
-            if (object.getUserData()!=null && GameObject.class.isAssignableFrom(object.getUserData().getClass()))
-            {
-                ((GameObject) object.getUserData()).onHeadHit();
-
-            }
-        }
+        //if (fixtureA.getUserData()=="head" || fixtureB.getUserData()=="head" )
+        //{
+        //    Fixture head=fixtureA.getUserData()=="head"?fixtureA:fixtureB;
+        //    Fixture object=head==fixtureA?fixtureB:fixtureA;
+        //
+        //    if (object.getUserData()!=null && GameObject.class.isAssignableFrom(object.getUserData().getClass()))
+        //    {
+        //       ((GameObject) object.getUserData()).onHeadHit();
+        //
+        //    }
+        //}
         switch (cDef){
-
-
+            case MARIO_HEAD_BIT|BRICK_BIT:
+            case MARIO_HEAD_BIT|COINS_BIT:
+                if (fixtureA.getFilterData().categoryBits==MARIO_HEAD_BIT)
+                {
+                    ((GameObject)fixtureB.getUserData()).isHeadHit((Mario) fixtureA.getUserData());
+                }
+                else
+                {
+                  ((GameObject)fixtureA.getUserData()).isHeadHit((Mario)fixtureB.getUserData());
+                }
+                break;
             case ENERMY_HEAD_BIT| MARIO_BIT:
                 if (fixtureA.getFilterData().categoryBits==ENERMY_HEAD_BIT)
                     ((Enermy)fixtureA.getUserData()).hitOnHead();
@@ -69,12 +81,20 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Enermy)fixtureB.getUserData()).reverseVelocity(true,false);
                 break;
+
+            case MARIO_BIT|DEADZONE_BIT:
             case MARIO_BIT|ENERMY_BIT:
             {
-                Gdx.app.log("Mario","died!! \n");
-
-            }       break;
-
+                if (fixtureA.getFilterData().categoryBits==MARIO_BIT)
+                {
+                    ((Mario) fixtureA.getUserData()).hit();
+                }
+                else
+                {
+                   ((Mario)fixtureB.getUserData()).hit();
+                }
+                break;
+            }
             case ITEM_BIT|OBJECT_BIT:
                 if (fixtureA.getFilterData().categoryBits==ITEM_BIT)
                     ((Item)fixtureA.getUserData()).reverseVelocity(true,false);
@@ -87,14 +107,11 @@ public class WorldContactListener implements ContactListener {
                     ((Item)fixtureA.getUserData()).useItem((Mario)fixtureB.getUserData());
 
                 }
-
                 else
                 {
                     ((Item)fixtureB.getUserData()).useItem((Mario)fixtureA.getUserData());
                 }
-
                 break;
-
         }
 
     }

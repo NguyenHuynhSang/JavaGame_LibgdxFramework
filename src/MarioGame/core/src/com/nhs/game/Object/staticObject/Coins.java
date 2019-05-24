@@ -1,4 +1,4 @@
-package com.nhs.game.Object;
+package com.nhs.game.Object.staticObject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -6,8 +6,10 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
+import com.nhs.game.Object.GameObject;
 import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Items.Mushroom;
+import com.nhs.game.Object.Mario;
 import com.nhs.game.UiManager.Hud;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
@@ -30,7 +32,7 @@ public class Coins extends GameObject {
     }
 
     @Override
-    public void onHeadHit() {
+    public void isHeadHit(Mario mario) {
         Gdx.app.log("Coin","[Collision]");
         if (getCell().getTile().getId()==BLANK_COIN)
             mariobros.manager.get("audio/sounds/bump.wav",Sound.class).play();
@@ -45,13 +47,12 @@ public class Coins extends GameObject {
             }
             else
 
-
-            mariobros.manager.get("audio/sounds/coin.wav",Sound.class).play();
+                mariobros.manager.get("audio/sounds/coin.wav",Sound.class).play();
         }
         getCell().setTile(tileset.getTile(BLANK_COIN));
 
-
     }
+
 
 
 }

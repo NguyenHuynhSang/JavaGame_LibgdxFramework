@@ -12,10 +12,11 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Object.Goomba;
+import com.nhs.game.Object.staticObject.DeadZone;
 import com.nhs.game.Object.staticObject.MapBound;
 import com.nhs.game.Screens.PlayScreen;
-import com.nhs.game.Object.Bricks;
-import com.nhs.game.Object.Coins;
+import com.nhs.game.Object.staticObject.Bricks;
+import com.nhs.game.Object.staticObject.Coins;
 
 import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
@@ -57,14 +58,14 @@ public class B2WorldCreator {
         }
         //create body for brick
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
-            Rectangle rec=((RectangleMapObject) object).getRectangle();
+           // Rectangle rec=((RectangleMapObject) object).getRectangle();
             new Bricks(screen,object );
         }
 
 
         //create body for coins
         for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
-            Rectangle rec=((RectangleMapObject) object).getRectangle();
+           // Rectangle rec=((RectangleMapObject) object).getRectangle();
             new Coins(screen,object);
         }
 
@@ -106,6 +107,13 @@ public class B2WorldCreator {
            //  Rectangle rec=((RectangleMapObject) object).getRectangle();
              goombas.add(new Goomba(screen,tile.getX()/PPM,tile.getY()/PPM));
 
+         }
+
+
+         //create body for deadzone
+         for (MapObject object : map.getLayers().get(9).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
+           //  Rectangle rec=((RectangleMapObject) object).getRectangle();
+             new DeadZone(screen,object);
          }
 
     }

@@ -47,7 +47,7 @@ public abstract  class Item extends Sprite {
 
         if (!Destroyed) {
 
-            //super.draw(batch);
+            super.draw(batch);
 
         }
 

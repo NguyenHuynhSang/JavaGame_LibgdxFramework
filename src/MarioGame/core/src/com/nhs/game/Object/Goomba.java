@@ -1,5 +1,6 @@
 package com.nhs.game.Object;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.mariobros;
 
 
 import java.util.Vector;
@@ -139,5 +141,6 @@ public class Goomba extends  Enermy
         //xóa b2body của goomba để k xét va chạm nữa
         setDestroy=true;
         UpdateScore(100);
+        mariobros.manager.get("audio/sounds/stomp.wav",Sound.class).play();
     }
 }

@@ -36,6 +36,7 @@ import static com.nhs.game.Global.global._height;
 import static com.nhs.game.Global.global._mapWidth;
 import static com.nhs.game.Global.global._mapWidthX2;
 import static com.nhs.game.Global.global._width;
+import static com.nhs.game.Global.global.countPress;
 
 public class PlayScreen implements Screen {
 
@@ -140,11 +141,20 @@ public class PlayScreen implements Screen {
     public  void handleInput(float dt)
     {
 
+        devSupport();
+
+
+        if (player.currentState==Mario.State.DEAD)
+            return;
+
         if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0)
         {
 
             player.b2body.applyLinearImpulse(new Vector2(0,3.8f),player.b2body.getWorldCenter(),true);
-            mariobros.manager.get("audio/sounds/jump.wav",Sound.class).play();
+            if (player.isBig==true)
+                 mariobros.manager.get("audio/sounds/bigjump.wav",Sound.class).play();
+            else
+                mariobros.manager.get("audio/sounds/jump.wav",Sound.class).play();
             player.hitGround=false;
         }
         if (controller.isRightPressed()&& player.b2body.getLinearVelocity().x<=1.2)
@@ -201,7 +211,8 @@ public class PlayScreen implements Screen {
             item.update(dt);
         }
         hud.Update(dt);
-        if (player.b2body.getPosition().x>(_mapWidth+_width/2)/PPM&&player.b2body.getPosition().x<(_mapWidthX2-_width/2)/PPM)
+        //stop cam when mario was dead
+        if (player.b2body.getPosition().x>(_mapWidth+_width/2)/PPM&&player.b2body.getPosition().x<(_mapWidthX2-_width/2)/PPM &&player.currentState!=Mario.State.DEAD)
         gameCam.position.x=player.b2body.getPosition().x;
         gameCam.update();
         renderer.setView(gameCam);// set vi tri ve map
@@ -225,7 +236,7 @@ public class PlayScreen implements Screen {
         player.draw(game.batch); //draw mario to the screen
         for (Enermy e:creator.getGoombas())
         {
-          //  e.draw(game.batch);
+            e.draw(game.batch);
 
         }
         for (Item item:items)
@@ -236,6 +247,24 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
         controller.draw();
+    }
+
+
+    private void devSupport(){
+
+        if (controller.isReset()){
+            player.resetPlayer();
+            gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
+        }
+        if (controller.isGrowPlayer())
+        {
+            player.growMarioforDev();
+        }
+        if (controller.isKill())
+        {
+            player.killPlayer();
+        }
+
     }
 
     @Override

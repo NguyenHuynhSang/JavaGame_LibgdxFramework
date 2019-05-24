@@ -39,6 +39,10 @@ public class mariobros extends Game {
 		manager.load("audio/sounds/jump.wav",Sound.class);
 		manager.load("audio/sounds/pwspawn.wav",Sound.class);
 		manager.load("audio/sounds/powerup.wav",Sound.class);
+		manager.load("audio/sounds/powerdown.wav",Sound.class);
+		manager.load("audio/sounds/mariodie.wav",Sound.class);
+		manager.load("audio/sounds/bigjump.wav",Sound.class);
+		manager.load("audio/sounds/stomp.wav",Sound.class);
 		manager.finishLoading();
 		setScreen(new PlayScreen(this));
 	}

@@ -1,5 +1,6 @@
 package com.nhs.game.Object;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -14,11 +15,12 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Object.Mario;
 
 import static com.nhs.game.Global.global.PPM;
 
 
-public abstract class GameObject {
+public abstract class GameObject extends Sprite {
     protected World world;
     protected TiledMap map;
     protected TiledMapTile tile;
@@ -49,9 +51,7 @@ public abstract class GameObject {
     }
 
 
-    public  abstract void onHeadHit();
-
-
+    public  abstract  void isHeadHit(Mario mario);
     public  void setCategoryFilter(short filternit){
         Filter filter=new Filter();
         filter.categoryBits=filternit;
@@ -62,7 +62,7 @@ public TiledMapTileLayer.Cell getCell(){
     TiledMapTileLayer layer=(TiledMapTileLayer)map.getLayers().get(1);
     return  layer.getCell((int)(body.getPosition().x*PPM/16),
             (int)(body.getPosition().y*PPM/16)
-            );
+    );
 
 
 

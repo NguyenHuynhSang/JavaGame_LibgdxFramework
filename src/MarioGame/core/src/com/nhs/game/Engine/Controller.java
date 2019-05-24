@@ -23,6 +23,7 @@ public class Controller {
     Viewport viewport;
     Stage stage;
     boolean upPressed, downPressed, leftPressed, rightPressed;
+    boolean resetPress,growPress,killPress;
     OrthographicCamera camera;
 
     public Controller() {
@@ -46,6 +47,19 @@ public class Controller {
                     case Input.Keys.RIGHT:
                         rightPressed = true;
                         break;
+                        //dev support
+                    case Input.Keys.Q:
+                        resetPress=true;
+                        Gdx.app.log("Press"," Q");
+                        break;
+                    case Input.Keys.W:
+                        growPress=true;
+                        Gdx.app.log("Press"," W");
+                        break;
+                    case Input.Keys.E:
+                        killPress=true;
+                        Gdx.app.log("Press"," E");
+                        break;
                 }
                 return true;
             }
@@ -64,6 +78,17 @@ public class Controller {
                         break;
                     case Input.Keys.RIGHT:
                         rightPressed = false;
+                        break;
+                    case Input.Keys.Q:
+                        resetPress=false;
+                        break;
+                    case Input.Keys.W:
+                        growPress=false;
+                        //Gdx.app.log("Press"," Q");
+                        break;
+                    case Input.Keys.E:
+                        killPress=false;
+                        //Gdx.app.log("Press"," Q");
                         break;
                 }
                 return true;
@@ -185,6 +210,15 @@ public class Controller {
     public boolean isRightPressed() {
         return rightPressed;
     }
+
+
+    ///Dev support key (only on computer)
+
+    public boolean isReset(){ return resetPress;}
+    public boolean isGrowPlayer(){return growPress;}
+    public  boolean isKill(){return killPress;}
+
+
 
     public void resize(int width, int height){
         viewport.update(width, height);
