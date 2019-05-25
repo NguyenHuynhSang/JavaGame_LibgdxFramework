@@ -1,5 +1,6 @@
 package com.nhs.game.Screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -229,7 +230,7 @@ public class PlayScreen implements Screen {
 
 
         renderer.render();
-        b2dr.render(world,gameCam.combined); // hiện boundingbox lên để kiểm tra va chạm
+      //  b2dr.render(world,gameCam.combined); // hiện boundingbox lên để kiểm tra va chạm
         //draw hud riêng vì hud k chạy theo cam world
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
@@ -247,6 +248,12 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
         controller.draw();
+
+        if (isGameOver()) {
+            game.setScreen(new GameOver(game));
+            dispose();
+        }
+
     }
 
 
@@ -296,5 +303,15 @@ public class PlayScreen implements Screen {
     world.dispose();
     b2dr.dispose();
     hud.dispose();
+
+    }
+
+
+    public  boolean isGameOver(){
+        if (player.currentState==Mario.State.DEAD && player.getStateTimer()>3)
+        {
+            return  true;
+        }
+        return  false;
     }
 }

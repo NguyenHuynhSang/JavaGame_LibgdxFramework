@@ -355,5 +355,8 @@ public class Mario extends Sprite {
         Grow();
     }
 
+    public  boolean isDead(){return  isDead;}
+
+    public  float getStateTimer(){return stateTimer;}
 
 }
