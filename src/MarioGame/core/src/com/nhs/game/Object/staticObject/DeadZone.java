@@ -1,7 +1,7 @@
 package com.nhs.game.Object.staticObject;
 import com.badlogic.gdx.maps.MapObject;
 import com.nhs.game.Object.GameObject;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
 import static com.nhs.game.Global.global.DEADZONE_BIT;
 

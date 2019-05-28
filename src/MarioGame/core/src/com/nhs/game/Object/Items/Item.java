@@ -1,12 +1,11 @@
 package com.nhs.game.Object.Items;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
 
 import static com.nhs.game.Global.global.PPM;
@@ -19,12 +18,14 @@ public abstract  class Item extends Sprite {
     protected boolean Destroyed=false;
     protected Body body;
 
+    public  boolean isDestroyed;
     public  Item(PlayScreen screen,float x,float y){
         this.screen=screen;
         this.world=screen.getWorld();
         setPosition(x,y);
         setDestroy=false;
         Destroyed=false;
+        isDestroyed=false;
         setBounds(getX(),getY(),16/PPM,16/PPM);
         defineItem();
 
@@ -37,6 +38,7 @@ public abstract  class Item extends Sprite {
         if (setDestroy && !Destroyed){
             world.destroyBody(body);
             Destroyed=true;
+            isDestroyed=true;
         }
 
         }

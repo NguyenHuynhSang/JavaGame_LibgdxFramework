@@ -17,13 +17,15 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.nhs.game.Object.Enermy.Enermy;
 import com.nhs.game.Object.GameObject;
 import com.nhs.game.Object.Items.Item;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.FireBall;
+import com.nhs.game.Object.Player.Mario;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
 import static com.nhs.game.Global.global.DEADZONE_BIT;
 import static com.nhs.game.Global.global.ENERMY_BIT;
 import static com.nhs.game.Global.global.ENERMY_HEAD_BIT;
+import static com.nhs.game.Global.global.FIREBALL_BIT;
 import static com.nhs.game.Global.global.ITEM_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.MARIO_HEAD_BIT;
@@ -61,6 +63,7 @@ public class WorldContactListener implements ContactListener {
                   ((GameObject)fixtureA.getUserData()).isHeadHit((Mario)fixtureB.getUserData());
                 }
                 break;
+
             case ENERMY_HEAD_BIT| MARIO_BIT:
                 if (fixtureA.getFilterData().categoryBits==ENERMY_HEAD_BIT)
                     ((Enermy)fixtureA.getUserData()).hitOnHead((Mario)fixtureB.getUserData());
@@ -73,7 +76,23 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Enermy)fixtureB.getUserData()).reverseVelocity(true,false);
                 break;
-            case ENERMY_BIT|BRICK_BIT:
+            case FIREBALL_BIT|OBJECT_BIT:
+            case FIREBALL_BIT | ENERMY_BIT:
+                if(fixtureA.getFilterData().categoryBits == FIREBALL_BIT)
+                {
+                    ((FireBall)fixtureA.getUserData()).setToDestroy();
+                    //((Enermy)fixtureB.getUserData()).killEnermy();
+                }
+
+                else
+                {
+                    ((FireBall)fixtureB.getUserData()).setToDestroy();
+//                    ((Enermy)fixtureA.getUserData()).killEnermy();
+                }
+
+                break;
+
+        case ENERMY_BIT|BRICK_BIT:
                 if (fixtureA.getFilterData().categoryBits==ENERMY_BIT)
                     ((Enermy)fixtureA.getUserData()).reverseVelocity(true,false);
                 else
@@ -83,7 +102,6 @@ public class WorldContactListener implements ContactListener {
                 ((Enermy)fixtureA.getUserData()).onEnermyHit(((Enermy)fixtureB.getUserData()));
                 ((Enermy)fixtureB.getUserData()).onEnermyHit(((Enermy)fixtureA.getUserData()));
                 break;
-
             case MARIO_BIT|DEADZONE_BIT:
             {
                 if (fixtureA.getFilterData().categoryBits==MARIO_BIT)

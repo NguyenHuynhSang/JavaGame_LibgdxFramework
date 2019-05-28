@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
 
 public abstract class Enermy extends Sprite {
@@ -12,7 +12,7 @@ public abstract class Enermy extends Sprite {
     protected PlayScreen screen;
     public Body b2body;
     public Vector2 velocity;
-
+    public boolean eDestroyed;
     public  Enermy(PlayScreen screen,float x,float y)
     {
         this.world=screen.getWorld();
@@ -21,6 +21,7 @@ public abstract class Enermy extends Sprite {
         defineEnermy();
         velocity=new Vector2(0.5f,0.0f);
         b2body.setActive(false);
+        eDestroyed=false;
     }
 
 
@@ -33,6 +34,8 @@ public abstract class Enermy extends Sprite {
 
     public  abstract  void onEnermyHit(Enermy enermy);
 
+
+    public  abstract  void killEnermy();
     //đảo ngược chiều của vận tốc
     public void reverseVelocity(boolean x,boolean  y){
         if (x){

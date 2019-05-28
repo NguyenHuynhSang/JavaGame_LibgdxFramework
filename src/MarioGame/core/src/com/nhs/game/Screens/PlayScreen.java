@@ -21,7 +21,7 @@ import com.nhs.game.Object.Items.Item;
 import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Items.Mushroom;
 import com.nhs.game.UiManager.Hud;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Engine.B2WorldCreator;
 import com.nhs.game.Engine.Controller;
 import com.nhs.game.Engine.WorldContactListener;
@@ -61,6 +61,7 @@ public class PlayScreen implements Screen {
     private Mario player;
 
     private Array<Item> items;
+    private Array<Enermy> listEnemies;
     private LinkedBlockingQueue<ItemDef> itemstoSpawn;
 
     public  TiledMap getMap()
@@ -102,6 +103,7 @@ public class PlayScreen implements Screen {
         music.setLooping(true);
         music.play();
 
+        listEnemies =creator.getEnermy();
         items=new Array<Item>();
         itemstoSpawn=new LinkedBlockingQueue<ItemDef>();
 
@@ -135,11 +137,13 @@ public class PlayScreen implements Screen {
 
     }
 
+    private  boolean isPress=false;
+
     public  void handleInput(float dt)
     {
 
         devSupport();
-
+        if (Gdx.input.justTouched()) player.fire();
 
         if (player.currentState==Mario.State.DEAD)
             return;
@@ -163,6 +167,16 @@ public class PlayScreen implements Screen {
             player.b2body.applyLinearImpulse(new Vector2(-0.1f,0),player.b2body.getWorldCenter(),true);
         }
 
+        if (controller.isFirePressed())
+        {
+            if (!controller.justPress)
+            {
+                controller.justPress=true;
+                player.fire();
+
+            }
+
+        }
 
 
 
@@ -196,15 +210,26 @@ public class PlayScreen implements Screen {
         handleSpawningItem();
         world.step(1/50f,6,2);
         player.Update(dt);
-        for (Enermy e:creator.getEnermy())
+        for (Enermy e:listEnemies)
         {
+            if (e.eDestroyed){
+                listEnemies.removeValue(e,true);
+                Gdx.app.log("[DeleteEnermyFromArray]","liseEnemy size: %d"+listEnemies.size);
+                continue;
+            }
             e.update(dt);
             if (e.getX()< gameCam.position.x+224/PPM)
                 e.b2body.setActive(true);
         }
 
+
         for (Item item:items)
         {
+
+            if (item.isDestroyed){
+                items.removeValue(item,true);
+                continue;
+            }
             item.update(dt);
         }
         hud.Update(dt);
@@ -226,12 +251,12 @@ public class PlayScreen implements Screen {
 
 
         renderer.render();
-      //  b2dr.render(world,gameCam.combined); // hiện boundingbox lên để kiểm tra va chạm
+        b2dr.render(world,gameCam.combined); // hiện boundingbox lên để kiểm tra va chạm
         //draw hud riêng vì hud k chạy theo cam world
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
         player.draw(game.batch); //draw mario to the screen
-        for (Enermy e:creator.getEnermy())
+        for (Enermy e: listEnemies)
         {
             e.draw(game.batch);
 
@@ -255,17 +280,24 @@ public class PlayScreen implements Screen {
 
     private void devSupport(){
 
-        if (controller.isReset()){
+        if (controller.isReset() && !controller.justPress){
             player.resetPlayer();
             gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
+            controller.justPress=true;
+            Gdx.app.log("[Dev]","reset Player");
         }
-        if (controller.isGrowPlayer())
+        if (controller.isGrowPlayer() && !controller.justPress)
         {
+
             player.growMarioforDev();
+            controller.justPress=true;
+            Gdx.app.log("[Dev]","grow Player");
         }
-        if (controller.isKill())
+        if (controller.isKill() && !controller.justPress)
         {
             player.killPlayer();
+            controller.justPress=true;
+            Gdx.app.log("[Dev]","kill Player");
         }
 
     }

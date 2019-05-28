@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nhs.game.Screens.PlayScreen;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.Mario;
 
 import static com.nhs.game.Global.global.PPM;
 

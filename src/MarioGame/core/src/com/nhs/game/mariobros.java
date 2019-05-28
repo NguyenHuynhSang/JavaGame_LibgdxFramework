@@ -42,6 +42,8 @@ public class mariobros extends Game {
 		manager.load("audio/sounds/powerdown.wav",Sound.class);
 		manager.load("audio/sounds/mariodie.wav",Sound.class);
 		manager.load("audio/sounds/lifeup.wav",Sound.class);
+		manager.load("audio/sounds/kick.wav",Sound.class);
+		manager.load("audio/sounds/fireball.wav",Sound.class);
 		manager.load("audio/sounds/bigjump.wav",Sound.class);
 		manager.load("audio/sounds/stomp.wav",Sound.class);
 		manager.finishLoading();

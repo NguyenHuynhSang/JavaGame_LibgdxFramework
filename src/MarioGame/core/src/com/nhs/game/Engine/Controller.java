@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-
 import static com.nhs.game.Global.global._height;
 import static com.nhs.game.Global.global._width;
 
@@ -22,10 +21,10 @@ public class Controller {
 
     Viewport viewport;
     Stage stage;
-    boolean upPressed, downPressed, leftPressed, rightPressed;
+    boolean upPressed, downPressed, leftPressed, rightPressed,firePressed;
     boolean resetPress,growPress,killPress;
     OrthographicCamera camera;
-
+    public  boolean justPress;
     public Controller() {
         camera = new OrthographicCamera();
         viewport = new FitViewport(_width, _height, camera);
@@ -60,6 +59,10 @@ public class Controller {
                         killPress=true;
                         Gdx.app.log("Press"," E");
                         break;
+                    case Input.Keys.F:
+                        firePressed=true;
+                        Gdx.app.log("Press"," F");
+                        break;
                 }
                 return true;
             }
@@ -81,14 +84,22 @@ public class Controller {
                         break;
                     case Input.Keys.Q:
                         resetPress=false;
+                        justPress=false;
                         break;
                     case Input.Keys.W:
                         growPress=false;
+                        justPress=false;
                         //Gdx.app.log("Press"," Q");
                         break;
                     case Input.Keys.E:
+                        justPress=false;
                         killPress=false;
                         //Gdx.app.log("Press"," Q");
+                        break;
+                    case Input.Keys.F:
+                        firePressed=false;
+                        justPress=false;
+                       // Gdx.app.log("Press"," E");
                         break;
                 }
                 return true;
@@ -190,7 +201,6 @@ public class Controller {
         //stage.setDebugAll(true);
     }
     public void draw(){
-
         stage.draw();
     }
 
@@ -211,6 +221,7 @@ public class Controller {
         return rightPressed;
     }
 
+    public boolean isFirePressed(){return firePressed;}
 
     ///Dev support key (only on computer)
 
@@ -222,5 +233,7 @@ public class Controller {
     public void resize(int width, int height){
         viewport.update(width, height);
     }
+
+
 }
 

@@ -1,9 +1,10 @@
-package com.nhs.game.Object;
+package com.nhs.game.Object.Player;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -21,8 +22,6 @@ import com.nhs.game.Object.Enermy.Turtle;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
 
-import javax.swing.Box;
-
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
 import static com.nhs.game.Global.global.DEADZONE_BIT;
@@ -30,6 +29,7 @@ import static com.nhs.game.Global.global.ENERMY_BIT;
 import static com.nhs.game.Global.global.ENERMY_HEAD_BIT;
 import static com.nhs.game.Global.global.GROUND_BIT;
 import static com.nhs.game.Global.global.ITEM_BIT;
+import static com.nhs.game.Global.global.MAPZONE_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.MARIO_HEAD_BIT;
 import static com.nhs.game.Global.global.NONCOLLISION_BIT;
@@ -60,8 +60,14 @@ public class Mario extends Sprite {
     private boolean isDead;
     public  boolean isTouchGround;
 
+    private PlayScreen screen;
+
+
+    private Array<FireBall> fireballs;
+
     public  Mario(PlayScreen screen)
     {
+        this.screen=screen;
         this.world=screen.getWorld();
         defineMario();
 
@@ -106,6 +112,8 @@ public class Mario extends Sprite {
         setBounds(0,0,16/PPM,14/PPM);
         setRegion(marioStand);
         hitGround=false;
+        fireballs = new Array<FireBall>();
+
     }
 
 
@@ -119,6 +127,16 @@ public class Mario extends Sprite {
         setRegion(getFrame(dt));
         if (defineBigMario) defineBigMario();
         if (refedinemario) redefineMario();
+
+        for(FireBall  ball : fireballs) {
+            if (ball.isDestroyed)
+            {
+                fireballs.removeValue(ball,true);
+                Gdx.app.log("[Delete listFireball]","Fireball size: %d"+fireballs.size);
+                continue;
+            }
+            ball.update(dt);
+        }
     }
 
     public void Grow(){
@@ -220,7 +238,7 @@ public class Mario extends Sprite {
         // category để nhận biết đó là object nào
         // mask là các object và object đang xét có thể va chạm
         fdef.filter.categoryBits=MARIO_BIT;
-        fdef.filter.maskBits= GROUND_BIT | COINS_BIT |BRICK_BIT|ENERMY_BIT|OBJECT_BIT|ENERMY_HEAD_BIT|ITEM_BIT|DEADZONE_BIT;
+        fdef.filter.maskBits= GROUND_BIT | COINS_BIT |BRICK_BIT|ENERMY_BIT|OBJECT_BIT|ENERMY_HEAD_BIT|ITEM_BIT|DEADZONE_BIT|MAPZONE_BIT;
 
         fdef.shape=shape;
 
@@ -258,7 +276,7 @@ public class Mario extends Sprite {
         // category để nhận biết đó là object nào
         // mask là các object và object đang xét có thể va chạm
         fdef.filter.categoryBits=MARIO_BIT;
-        fdef.filter.maskBits= GROUND_BIT | COINS_BIT |BRICK_BIT|ENERMY_BIT|OBJECT_BIT|ENERMY_HEAD_BIT|ITEM_BIT|DEADZONE_BIT;
+        fdef.filter.maskBits= GROUND_BIT | COINS_BIT |BRICK_BIT|ENERMY_BIT|OBJECT_BIT|ENERMY_HEAD_BIT|ITEM_BIT|DEADZONE_BIT|MAPZONE_BIT;
 
         fdef.shape=shape;
 
@@ -279,8 +297,10 @@ public class Mario extends Sprite {
     }
 
     public  void hit(Enermy enermy){
+
         if  (enermy instanceof Turtle && ((Turtle)enermy).getCurrentState()==Turtle.State.SHELL)
         {
+            mariobros.manager.get("audio/sounds/kick.wav", Sound.class).play();
             ((Turtle)enermy).wasKicked(this.getX()<=enermy.getX()?Turtle.KICK_RIGHT_SPEED:Turtle.KICK_LEFT_SPEED);
         }
         else
@@ -329,13 +349,9 @@ public class Mario extends Sprite {
         // category để nhận biết đó là object nào
         // mask là các object và object đang xét có thể va chạm
         fdef.filter.categoryBits=MARIO_BIT;
-        fdef.filter.maskBits= GROUND_BIT | COINS_BIT |BRICK_BIT|ENERMY_BIT|OBJECT_BIT|ENERMY_HEAD_BIT|ITEM_BIT|DEADZONE_BIT;
-
+        fdef.filter.maskBits= GROUND_BIT | COINS_BIT |BRICK_BIT|ENERMY_BIT|OBJECT_BIT|ENERMY_HEAD_BIT|ITEM_BIT|DEADZONE_BIT|MAPZONE_BIT;
         fdef.shape=shape;
-
         b2body.createFixture(fdef).setUserData(this);
-
-
         //Create sensor call head to check the collision between mario's head and brick or coins,stuffs...
 
         EdgeShape head=new EdgeShape();
@@ -351,7 +367,6 @@ public class Mario extends Sprite {
 
     public  void resetPlayer(){
         if (!isDead) return;
-        Gdx.app.log("Dev","reset Player");
         mariobros.manager.get("audio/music/mario_music.ogg",Music.class).play();
         defineMario();
         currentState=State.STANDDING;
@@ -365,7 +380,6 @@ public class Mario extends Sprite {
     public void killPlayer(){
         if (isDead) return;
         hit(null);
-        Gdx.app.log("Dev","Kill Player");
 
     }
     public  void growMarioforDev(){
@@ -376,5 +390,17 @@ public class Mario extends Sprite {
     public  boolean isDead(){return  isDead;}
 
     public  float getStateTimer(){return stateTimer;}
+
+    public void fire(){
+        mariobros.manager.get("audio/sounds/fireball.wav", Sound.class).play();
+        fireballs.add(new FireBall(screen, b2body.getPosition().x, b2body.getPosition().y, isRight ? true : false));
+    }
+
+
+    public void draw(Batch batch){
+        super.draw(batch);
+        for(FireBall ball : fireballs)
+            ball.draw(batch);
+    }
 
 }

@@ -1,16 +1,10 @@
 package com.nhs.game.Object.staticObject;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.nhs.game.Object.GameObject;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
-import com.nhs.game.UiManager.Hud;
-import com.nhs.game.mariobros;
 
-import static com.nhs.game.Global.global.BRICK_BIT;
-import static com.nhs.game.Global.global.DISTROYED_BIT;
 import static com.nhs.game.Global.global.GROUND_BIT;
 
 public class Ground extends GameObject {

@@ -11,15 +11,14 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
-
-import javax.swing.Box;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
 import static com.nhs.game.Global.global.ENERMY_BIT;
 import static com.nhs.game.Global.global.ENERMY_HEAD_BIT;
+import static com.nhs.game.Global.global.FIREBALL_BIT;
 import static com.nhs.game.Global.global.GROUND_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.NONCOLLISION_BIT;
@@ -37,7 +36,6 @@ public class Turtle extends  Enermy {
     private Animation wallAnimation;
     private  float deadRotation;
     private com.badlogic.gdx.utils.Array<TextureRegion> frames;
-    private boolean setDestroy;
     private boolean Destroyed;
     public Turtle(PlayScreen screen, float x, float y) {
 
@@ -69,7 +67,7 @@ public class Turtle extends  Enermy {
         // category để nhận biết đó là object nào
         // mask là các object và object đang xét có thể va chạm
         fdef.filter.categoryBits=ENERMY_BIT;
-        fdef.filter.maskBits= GROUND_BIT |MARIO_BIT| COINS_BIT |BRICK_BIT|OBJECT_BIT|ENERMY_BIT;
+        fdef.filter.maskBits= GROUND_BIT |MARIO_BIT| COINS_BIT |BRICK_BIT|OBJECT_BIT|ENERMY_BIT|FIREBALL_BIT;
 
         fdef.shape=shape;
 
@@ -137,6 +135,7 @@ public class Turtle extends  Enermy {
             if (stateTime>5 && !Destroyed){
                 world.destroyBody(b2body);
                 Destroyed=true;
+                eDestroyed=true;
             }
         }else
         b2body.setLinearVelocity(velocity);
@@ -167,6 +166,11 @@ public class Turtle extends  Enermy {
             reverseVelocity(true,false);
         }
 
+    }
+
+    @Override
+    public void killEnermy() {
+        killed();
     }
 
     public void wasKicked(int speed){

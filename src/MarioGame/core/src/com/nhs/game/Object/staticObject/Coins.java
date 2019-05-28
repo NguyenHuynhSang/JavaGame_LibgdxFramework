@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.nhs.game.Object.GameObject;
 import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Items.Mushroom;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.UiManager.Hud;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;

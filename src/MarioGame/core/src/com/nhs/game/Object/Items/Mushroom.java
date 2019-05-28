@@ -5,13 +5,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.nhs.game.Object.Mario;
+import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
-import static com.nhs.game.Global.global.ENERMY_BIT;
 import static com.nhs.game.Global.global.GROUND_BIT;
 import static com.nhs.game.Global.global.ITEM_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
@@ -56,7 +55,7 @@ public class Mushroom extends Item {
         }
         else
         mariobros.manager.get("audio/sounds/lifeup.wav",Sound.class).play();
-
+        isDestroyed=true;
     }
 
     @Override
