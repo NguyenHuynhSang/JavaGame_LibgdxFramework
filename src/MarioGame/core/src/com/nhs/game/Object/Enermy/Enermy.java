@@ -1,9 +1,10 @@
-package com.nhs.game.Object;
+package com.nhs.game.Object.Enermy;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.nhs.game.Object.Mario;
 import com.nhs.game.Screens.PlayScreen;
 
 public abstract class Enermy extends Sprite {
@@ -28,8 +29,9 @@ public abstract class Enermy extends Sprite {
     protected abstract void defineEnermy();
 
     public abstract  void update(float dt);
-    public   abstract void hitOnHead();
+    public   abstract void hitOnHead(Mario mario);
 
+    public  abstract  void onEnermyHit(Enermy enermy);
 
     //đảo ngược chiều của vận tốc
     public void reverseVelocity(boolean x,boolean  y){

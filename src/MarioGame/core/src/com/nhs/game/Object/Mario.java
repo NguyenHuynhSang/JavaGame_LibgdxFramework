@@ -16,6 +16,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.nhs.game.Object.Enermy.Enermy;
+import com.nhs.game.Object.Enermy.Turtle;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
 
@@ -120,7 +122,9 @@ public class Mario extends Sprite {
     }
 
     public void Grow(){
-        if (isBig) return;
+        if (isBig) {
+            return;
+        }
         isGrow=true;
         isBig=true;
         setBounds(getX(),getY(),getWidth(),getHeight()*2);
@@ -274,25 +278,38 @@ public class Mario extends Sprite {
         defineBigMario=false;
     }
 
-    public  void hit(){
-        if (isBig)
+    public  void hit(Enermy enermy){
+        if  (enermy instanceof Turtle && ((Turtle)enermy).getCurrentState()==Turtle.State.SHELL)
         {
-            isBig=false;
-            refedinemario=true;
-            setBounds(getX(),getY(),getWidth(),getHeight()/2);
-            mariobros.manager.get("audio/sounds/powerdown.wav",Sound.class).play();
-        }else{
-            mariobros.manager.get("audio/music/mario_music.ogg",Music.class).stop();
-            mariobros.manager.get("audio/sounds/mariodie.wav",Sound.class).play();
-            isDead=true;
-            Filter filer=new Filter();
-            filer.maskBits=NONCOLLISION_BIT;
-            for (Fixture fixture:b2body.getFixtureList()){
-                fixture.setFilterData(filer);
-            }
-            //đẩy mario lên một khoảng
-            b2body.applyLinearImpulse(new Vector2(0,4f),b2body.getWorldCenter(),true );
+            ((Turtle)enermy).wasKicked(this.getX()<=enermy.getX()?Turtle.KICK_RIGHT_SPEED:Turtle.KICK_LEFT_SPEED);
         }
+        else
+        {
+            MarioDead();
+        }
+
+    }
+
+    public  void MarioDead(){
+
+        if (isBig) {
+            isBig = false;
+            refedinemario = true;
+            setBounds(getX(), getY(), getWidth(), getHeight() / 2);
+            mariobros.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
+            return;
+        }
+        mariobros.manager.get("audio/music/mario_music.ogg",Music.class).stop();
+        mariobros.manager.get("audio/sounds/mariodie.wav",Sound.class).play();
+        isDead=true;
+        Filter filer=new Filter();
+        filer.maskBits=NONCOLLISION_BIT;
+        for (Fixture fixture:b2body.getFixtureList()){
+            fixture.setFilterData(filer);
+        }
+        //đẩy mario lên một khoảng
+        b2body.applyLinearImpulse(new Vector2(0,4f),b2body.getWorldCenter(),true );
+
     }
     public  void redefineMario(){
         Vector2 pos=b2body.getPosition();
@@ -343,10 +360,11 @@ public class Mario extends Sprite {
         isBig=false;
         isGrow=false;
 
+
     }
     public void killPlayer(){
         if (isDead) return;
-        hit();
+        hit(null);
         Gdx.app.log("Dev","Kill Player");
 
     }

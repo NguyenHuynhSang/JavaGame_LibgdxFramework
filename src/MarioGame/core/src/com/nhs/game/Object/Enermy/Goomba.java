@@ -1,5 +1,6 @@
-package com.nhs.game.Object;
+package com.nhs.game.Object.Enermy;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,11 +11,11 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
+import com.nhs.game.Object.Enermy.Enermy;
+import com.nhs.game.Object.Mario;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
 
-
-import java.util.Vector;
 
 import sun.security.krb5.internal.crypto.Des;
 
@@ -28,7 +29,7 @@ import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
 import static com.nhs.game.UiManager.Hud.UpdateScore;
 
-public class Goomba extends  Enermy
+public class Goomba extends Enermy
 {
 
     private float stateTime;
@@ -98,7 +99,7 @@ public class Goomba extends  Enermy
         // category để nhận biết đó là object nào
         // mask là các object và object đang xét có thể va chạm
         fdef.filter.categoryBits=ENERMY_BIT;
-        fdef.filter.maskBits= GROUND_BIT |MARIO_BIT| COINS_BIT |BRICK_BIT|OBJECT_BIT;
+        fdef.filter.maskBits= GROUND_BIT |MARIO_BIT| COINS_BIT |BRICK_BIT|OBJECT_BIT|ENERMY_BIT;
 
         fdef.shape=shape;
 
@@ -137,10 +138,21 @@ public class Goomba extends  Enermy
     }
 
     @Override
-    public void hitOnHead() {
+    public void hitOnHead(Mario mario) {
         //xóa b2body của goomba để k xét va chạm nữa
         setDestroy=true;
         UpdateScore(100);
         mariobros.manager.get("audio/sounds/stomp.wav",Sound.class).play();
+    }
+
+    @Override
+    public void onEnermyHit(Enermy enermy) {
+        Gdx.app.log("Coll","Turtle with goomba");
+        if(enermy instanceof  Turtle &&((Turtle)enermy).currentState==Turtle.State.MOVING_SHELL)
+        {
+            Gdx.app.log("Coll","Turtle with goomba");
+            setDestroy=true;
+            mariobros.manager.get("audio/sounds/stomp.wav",Sound.class).play();
+        }
     }
 }

@@ -11,7 +11,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.nhs.game.Object.Goomba;
+import com.nhs.game.Object.Enermy.Enermy;
+import com.nhs.game.Object.Enermy.Goomba;
+import com.nhs.game.Object.Enermy.Turtle;
 import com.nhs.game.Object.staticObject.DeadZone;
 import com.nhs.game.Object.staticObject.MapBound;
 import com.nhs.game.Screens.PlayScreen;
@@ -26,11 +28,16 @@ import static com.nhs.game.Global.global._mapWidthX2;
 public class B2WorldCreator {
 
     private Array<Goomba> goombas;
-
+    private Array<Turtle> turtle;
     public Array<Goomba> getGoombas() {
         return goombas;
     }
-
+    public Array<Enermy> getEnermy(){
+        Array<Enermy> enermies=new Array<Enermy>();
+        enermies.addAll(goombas);
+        enermies.addAll(turtle);
+        return  enermies;
+    }
     public B2WorldCreator(PlayScreen screen)
      {
 
@@ -116,6 +123,15 @@ public class B2WorldCreator {
              new DeadZone(screen,object);
          }
 
-    }
+         turtle=new Array<Turtle>();
+         for (MapObject object : map.getLayers().get(11).getObjects().getByType(TiledMapTileMapObject.class)){ //get the coins object in tilemap
+             TiledMapTileMapObject tile=((TiledMapTileMapObject)object);
+             //  Rectangle rec=((RectangleMapObject) object).getRectangle();
+             turtle.add(new Turtle(screen,tile.getX()/PPM,tile.getY()/PPM));
+
+         }
+
+
+     }
 
 }

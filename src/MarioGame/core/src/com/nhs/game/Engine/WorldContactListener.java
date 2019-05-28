@@ -9,17 +9,15 @@
 
 
 package com.nhs.game.Engine;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.nhs.game.Object.Enermy;
+import com.nhs.game.Object.Enermy.Enermy;
 import com.nhs.game.Object.GameObject;
 import com.nhs.game.Object.Items.Item;
 import com.nhs.game.Object.Mario;
-import com.nhs.game.Object.staticObject.Bricks;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
@@ -65,9 +63,9 @@ public class WorldContactListener implements ContactListener {
                 break;
             case ENERMY_HEAD_BIT| MARIO_BIT:
                 if (fixtureA.getFilterData().categoryBits==ENERMY_HEAD_BIT)
-                    ((Enermy)fixtureA.getUserData()).hitOnHead();
+                    ((Enermy)fixtureA.getUserData()).hitOnHead((Mario)fixtureB.getUserData());
                 else
-                    ((Enermy)fixtureB.getUserData()).hitOnHead();
+                    ((Enermy)fixtureB.getUserData()).hitOnHead((Mario)fixtureA.getUserData());
                 break;
             case ENERMY_BIT|OBJECT_BIT:
                 if (fixtureA.getFilterData().categoryBits==ENERMY_BIT)
@@ -81,17 +79,33 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Enermy)fixtureB.getUserData()).reverseVelocity(true,false);
                 break;
+            case ENERMY_BIT|ENERMY_BIT:
+                ((Enermy)fixtureA.getUserData()).onEnermyHit(((Enermy)fixtureB.getUserData()));
+                ((Enermy)fixtureB.getUserData()).onEnermyHit(((Enermy)fixtureA.getUserData()));
+                break;
 
             case MARIO_BIT|DEADZONE_BIT:
+            {
+                if (fixtureA.getFilterData().categoryBits==MARIO_BIT)
+                {
+                    ((Mario) fixtureA.getUserData()).MarioDead();
+                }
+                else
+                {
+                    ((Mario) fixtureB.getUserData()).MarioDead();
+                }
+                break;
+
+            }
             case MARIO_BIT|ENERMY_BIT:
             {
                 if (fixtureA.getFilterData().categoryBits==MARIO_BIT)
                 {
-                    ((Mario) fixtureA.getUserData()).hit();
+                    ((Mario) fixtureA.getUserData()).hit((Enermy)fixtureB.getUserData());
                 }
                 else
                 {
-                   ((Mario)fixtureB.getUserData()).hit();
+                   ((Mario)fixtureB.getUserData()).hit((Enermy)fixtureA.getUserData());
                 }
                 break;
             }

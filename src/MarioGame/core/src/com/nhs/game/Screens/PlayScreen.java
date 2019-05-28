@@ -1,6 +1,5 @@
 package com.nhs.game.Screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -17,19 +16,17 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.nhs.game.Object.Enermy;
+import com.nhs.game.Object.Enermy.Enermy;
 import com.nhs.game.Object.Items.Item;
 import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Items.Mushroom;
 import com.nhs.game.UiManager.Hud;
-import com.nhs.game.Object.Goomba;
 import com.nhs.game.Object.Mario;
 import com.nhs.game.Engine.B2WorldCreator;
 import com.nhs.game.Engine.Controller;
 import com.nhs.game.Engine.WorldContactListener;
 import com.nhs.game.mariobros;
 
-import java.util.PriorityQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static com.nhs.game.Global.global.PPM;
@@ -37,7 +34,6 @@ import static com.nhs.game.Global.global._height;
 import static com.nhs.game.Global.global._mapWidth;
 import static com.nhs.game.Global.global._mapWidthX2;
 import static com.nhs.game.Global.global._width;
-import static com.nhs.game.Global.global.countPress;
 
 public class PlayScreen implements Screen {
 
@@ -200,7 +196,7 @@ public class PlayScreen implements Screen {
         handleSpawningItem();
         world.step(1/50f,6,2);
         player.Update(dt);
-        for (Enermy e:creator.getGoombas())
+        for (Enermy e:creator.getEnermy())
         {
             e.update(dt);
             if (e.getX()< gameCam.position.x+224/PPM)
@@ -235,7 +231,7 @@ public class PlayScreen implements Screen {
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
         player.draw(game.batch); //draw mario to the screen
-        for (Enermy e:creator.getGoombas())
+        for (Enermy e:creator.getEnermy())
         {
             e.draw(game.batch);
 
