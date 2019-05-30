@@ -143,10 +143,10 @@ public class PlayScreen implements Screen {
     {
 
         devSupport();
-        if (Gdx.input.justTouched()) player.fire();
 
         if (player.currentState==Mario.State.DEAD)
             return;
+
 
         if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0)
         {
@@ -173,11 +173,10 @@ public class PlayScreen implements Screen {
             {
                 controller.justPress=true;
                 player.fire();
-
+                return;
             }
 
         }
-
 
 
 

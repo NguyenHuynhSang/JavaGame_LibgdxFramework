@@ -392,6 +392,14 @@ public class Mario extends Sprite {
     public  float getStateTimer(){return stateTimer;}
 
     public void fire(){
+
+        for(FireBall  ball : fireballs) {
+            if (ball.isDestroyed)
+            {
+                fireballs.removeValue(ball,true);
+                Gdx.app.log("[Delete listFireball]","Fireball size: %d"+fireballs.size);
+            }
+        }
         mariobros.manager.get("audio/sounds/fireball.wav", Sound.class).play();
         fireballs.add(new FireBall(screen, b2body.getPosition().x, b2body.getPosition().y, isRight ? true : false));
     }

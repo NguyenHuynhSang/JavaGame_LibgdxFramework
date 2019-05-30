@@ -76,18 +76,18 @@ public class WorldContactListener implements ContactListener {
                 else
                     ((Enermy)fixtureB.getUserData()).reverseVelocity(true,false);
                 break;
-            case FIREBALL_BIT|OBJECT_BIT:
+            //fcase FIREBALL_BIT|OBJECT_BIT:
             case FIREBALL_BIT | ENERMY_BIT:
                 if(fixtureA.getFilterData().categoryBits == FIREBALL_BIT)
                 {
                     ((FireBall)fixtureA.getUserData()).setToDestroy();
-                    //((Enermy)fixtureB.getUserData()).killEnermy();
+                    ((Enermy)fixtureB.getUserData()).killEnermy();
                 }
 
                 else
                 {
                     ((FireBall)fixtureB.getUserData()).setToDestroy();
-//                    ((Enermy)fixtureA.getUserData()).killEnermy();
+                    ((Enermy)fixtureA.getUserData()).killEnermy();
                 }
 
                 break;

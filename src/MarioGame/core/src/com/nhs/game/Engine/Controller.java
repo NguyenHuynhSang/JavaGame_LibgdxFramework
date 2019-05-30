@@ -123,6 +123,7 @@ public class Controller {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 upPressed = false;
+                justPress=false;
             }
         });
 
@@ -139,6 +140,7 @@ public class Controller {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 downPressed = false;
+                justPress=false;
             }
         });
 
@@ -155,6 +157,7 @@ public class Controller {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 rightPressed = false;
+                justPress=false;
             }
         });
 
@@ -171,10 +174,32 @@ public class Controller {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 leftPressed = false;
+                justPress=false;
             }
         });
+
+
+        Image fireImg = new Image(new Texture("fire.png"));
+        fireImg.setSize(50, 50);
+        fireImg.addListener(new InputListener() {
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                firePressed = true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                firePressed = false;
+                justPress=false;
+            }
+        });
+
+
+
         Table table = new Table();
-        table.setSize(_width,50);
+        table.setSize(50,50);
         table.left().bottom();
         table.pad(0,300,20,0);
         table.add();
@@ -196,8 +221,19 @@ public class Controller {
         table.row().pad(1, 1, 1, 1);
         //table.add();
 
+
+
+        Table table2 = new Table();
+        table2.setSize(50,50);
+        table2.left().bottom();
+        table2.pad(0,350,40,0);
+        table2.add();
+        table2.add(fireImg).size(fireImg.getWidth()/2, fireImg.getHeight()/2);
+
+
         stage.addActor(table);
         stage.addActor(table1);
+        stage.addActor(table2);
         //stage.setDebugAll(true);
     }
     public void draw(){
