@@ -17,7 +17,7 @@ public abstract  class Item extends Sprite {
     protected boolean setDestroy=false;
     protected boolean Destroyed=false;
     protected Body body;
-
+    protected float stateTimer;
     public  boolean isDestroyed;
     public  Item(PlayScreen screen,float x,float y){
         this.screen=screen;
@@ -28,7 +28,7 @@ public abstract  class Item extends Sprite {
         isDestroyed=false;
         setBounds(getX(),getY(),16/PPM,16/PPM);
         defineItem();
-
+        stateTimer=0;
     }
 
     public  abstract  void defineItem();
@@ -39,10 +39,11 @@ public abstract  class Item extends Sprite {
             world.destroyBody(body);
             Destroyed=true;
             isDestroyed=true;
+            stateTimer=0;
+            return;
         }
 
         }
-
 
     public  void draw(Batch batch)
     {

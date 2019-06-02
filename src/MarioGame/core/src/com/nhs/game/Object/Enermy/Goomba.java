@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
 
 
@@ -35,13 +36,13 @@ public class Goomba extends Enermy
     private com.badlogic.gdx.utils.Array<TextureRegion> frames;
     private boolean setDestroy;
     private boolean Destroyed;
-    public Goomba(PlayScreen screen, float x, float y) {
+    public Goomba(ScreenManagement screen, float x, float y) {
         super(screen, x, y);
 
         frames=new Array<TextureRegion>();
         for (int i=0;i<2;i++)
         {
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("goomba"),i*16,0,16,16));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("Goomba"),i*16,0,16,16));
         }
 
         wallAnimation=new Animation(0.4f,frames);
@@ -60,7 +61,7 @@ public class Goomba extends Enermy
         {
             world.destroyBody(b2body);
             Destroyed=true;
-            setRegion(new TextureRegion(screen.getAtlas().findRegion("goomba"),32,0,16,16));
+            setRegion(new TextureRegion(screen.getAtlas().findRegion("Goomba"),32,0,16,16));
             stateTime=0;
 
         } else if (!Destroyed)

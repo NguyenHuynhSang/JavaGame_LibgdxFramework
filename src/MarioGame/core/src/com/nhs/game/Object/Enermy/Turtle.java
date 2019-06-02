@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Screens.ScreenManagement;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
@@ -37,16 +38,16 @@ public class Turtle extends  Enermy {
     private  float deadRotation;
     private com.badlogic.gdx.utils.Array<TextureRegion> frames;
     private boolean Destroyed;
-    public Turtle(PlayScreen screen, float x, float y) {
+    public Turtle(ScreenManagement screen, float x, float y) {
 
         super(screen, x, y);
         frames=new Array<TextureRegion>();
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"),0,0,16,24));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"),16,0,16,24));
-        shell=new TextureRegion(screen.getAtlas().findRegion("turtle"),64,0,16,24);
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("Koopa"),0,0,16,32));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("Koopa"),16,0,16,32));
+        shell=new TextureRegion(screen.getAtlas().findRegion("Koopa"),64,0,16,32);
         wallAnimation=new Animation(0.2f,frames);
         currentState=preState=State.WALKING;
-        setBounds(getX(),getY(),16/PPM,24/PPM);
+        setBounds(getX(),getY(),16/PPM,32/PPM);
 
 
     }

@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.Object.Player.Mario;
+import com.nhs.game.Screens.ScreenManagement;
 
 import static com.nhs.game.Global.global.PPM;
 
@@ -27,9 +28,9 @@ public abstract class GameObject extends Sprite {
     protected Rectangle bbox;
     protected Body body;
     protected Fixture fixture;
-    protected PlayScreen screen;
+    protected ScreenManagement screen;
     protected MapObject object;
-    public GameObject(PlayScreen screen, MapObject object)
+    public GameObject(ScreenManagement screen, MapObject object)
     {
         this.object=object;
         this.screen=screen;

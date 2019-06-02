@@ -30,7 +30,7 @@ public class GameOver implements Screen {
         Table table=new Table();
         table.center();
         table.setFillParent(true);
-        Label gameOverLable=new Label("Game Over",font);
+        Label gameOverLable=new Label("GAME OVER ",font);
         Label replayLable=new Label("Click to replay",font);
         table.add(gameOverLable).expandX();
         table.row();
@@ -71,7 +71,7 @@ public class GameOver implements Screen {
     }
 
     @Override
-    public void hide() {
+    public  void hide() {
 
     }
 

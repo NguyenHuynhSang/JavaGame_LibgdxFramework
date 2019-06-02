@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Screens.ScreenManagement;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
@@ -21,7 +22,7 @@ import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
 
 public class FireBall extends Sprite {
-    PlayScreen screen;
+    ScreenManagement screen;
     World world;
     Array<TextureRegion> frames;
     Animation fireAnimation;
@@ -31,14 +32,15 @@ public class FireBall extends Sprite {
     boolean fireRight;
     Body b2body;
     public  boolean isDestroyed;
-    public FireBall(PlayScreen screen, float x, float y, boolean fireRight){
+    public FireBall(ScreenManagement screen, float x, float y, boolean fireRight){
         this.fireRight = fireRight;
         this.screen = screen;
         this.world = screen.getWorld();
         frames = new Array<TextureRegion>();
-        for(int i = 0; i < 4; i++){
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("fireball"), i * 8, 0, 8, 8));
-        }
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("FireBall"), 0, 0, 8, 8));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("FireBall"), 8, 0, 8, 8));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("FireBall"),  0, 8, 8, 8));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("FireBall"),  8, 8, 8, 8));
         fireAnimation = new Animation(0.2f, frames);
         setRegion((TextureRegion) fireAnimation.getKeyFrame(0));
         setBounds(x, y, 6 / PPM, 6 / PPM);

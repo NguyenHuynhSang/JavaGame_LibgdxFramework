@@ -22,7 +22,7 @@ public class Controller {
     Viewport viewport;
     Stage stage;
     boolean upPressed, downPressed, leftPressed, rightPressed,firePressed;
-    boolean resetPress,growPress,killPress;
+    boolean resetPress,growPress,killPress,imMortalPress;
     OrthographicCamera camera;
     public  boolean justPress;
     public Controller() {
@@ -59,10 +59,11 @@ public class Controller {
                         killPress=true;
                         Gdx.app.log("Press"," E");
                         break;
-                    case Input.Keys.F:
-                        firePressed=true;
-                        Gdx.app.log("Press"," F");
+                    case Input.Keys.D:
+                        imMortalPress=true;
+                        Gdx.app.log("Press"," D");
                         break;
+
                 }
                 return true;
             }
@@ -99,7 +100,12 @@ public class Controller {
                     case Input.Keys.F:
                         firePressed=false;
                         justPress=false;
-                       // Gdx.app.log("Press"," E");
+                        // Gdx.app.log("Press"," E");
+                        break;
+                    case Input.Keys.D:
+                        imMortalPress=false;
+                        justPress=false;
+                        // Gdx.app.log("Press"," E");
                         break;
                 }
                 return true;
@@ -265,6 +271,7 @@ public class Controller {
     public boolean isGrowPlayer(){return growPress;}
     public  boolean isKill(){return killPress;}
 
+    public  boolean isImMortal(){return imMortalPress;}
 
     public void resize(int width, int height){
         viewport.update(width, height);

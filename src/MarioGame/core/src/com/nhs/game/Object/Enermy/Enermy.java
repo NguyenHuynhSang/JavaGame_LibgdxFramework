@@ -6,14 +6,15 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Screens.ScreenManagement;
 
 public abstract class Enermy extends Sprite {
     protected World world;
-    protected PlayScreen screen;
+    protected ScreenManagement screen;
     public Body b2body;
     public Vector2 velocity;
     public boolean eDestroyed;
-    public  Enermy(PlayScreen screen,float x,float y)
+    public  Enermy(ScreenManagement screen, float x, float y)
     {
         this.world=screen.getWorld();
         this.screen=screen;
@@ -23,8 +24,6 @@ public abstract class Enermy extends Sprite {
         b2body.setActive(false);
         eDestroyed=false;
     }
-
-
 
 
     protected abstract void defineEnermy();

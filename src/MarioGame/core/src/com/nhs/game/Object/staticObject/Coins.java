@@ -7,9 +7,11 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
 import com.nhs.game.Object.GameObject;
+import com.nhs.game.Object.Items.Flower;
 import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Items.Mushroom;
 import com.nhs.game.Object.Player.Mario;
+import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.UiManager.Hud;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
@@ -23,7 +25,7 @@ public class Coins extends GameObject {
     private  final int BLANK_COIN=94;
 
 
-    public  Coins(PlayScreen screen, MapObject object)
+    public  Coins(ScreenManagement screen, MapObject object)
     {
      super(screen, object);
         tileset=map.getTileSets().getTileSet("tileset_gutter");
@@ -40,9 +42,16 @@ public class Coins extends GameObject {
         {
             if (object.getProperties().containsKey("mushroom"))
             {
-                screen.spawnItem(new ItemDef(new Vector2(body.getPosition().x,body.getPosition().y+16/PPM),
+                ((PlayScreen)screen).spawnItem(new ItemDef(new Vector2(body.getPosition().x,body.getPosition().y+16/PPM),
                         Mushroom.class));
                 Hud.UpdateScore(100);
+                mariobros.manager.get("audio/sounds/pwspawn.wav",Sound.class).play();
+            }
+            else if(object.getProperties().containsKey("flower"))
+            {
+                ((PlayScreen)screen).spawnItem(new ItemDef(new Vector2(body.getPosition().x,body.getPosition().y+16/PPM),
+                        Flower.class));
+                Hud.UpdateScore(500);
                 mariobros.manager.get("audio/sounds/pwspawn.wav",Sound.class).play();
             }
             else

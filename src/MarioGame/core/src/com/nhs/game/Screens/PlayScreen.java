@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.nhs.game.Object.Enermy.Enermy;
+import com.nhs.game.Object.Items.Flower;
 import com.nhs.game.Object.Items.Item;
 import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Items.Mushroom;
@@ -35,26 +36,7 @@ import static com.nhs.game.Global.global._mapWidth;
 import static com.nhs.game.Global.global._mapWidthX2;
 import static com.nhs.game.Global.global._width;
 
-public class PlayScreen implements Screen {
-
-    private mariobros game;
-    private OrthographicCamera gameCam;
-    private Viewport gamePort;
-    private Hud hud;
-    private Controller controller;
-    private TextureAtlas atlas;
-    private Music music;
-    private TmxMapLoader mapLoader;
-    private TiledMap map;
-    private OrthogonalTiledMapRenderer renderer;
-    private  B2WorldCreator creator;
-
-
-    //box 2d variables
-    private World world;
-    private Box2DDebugRenderer b2dr;
-
-
+public class PlayScreen extends ScreenManagement {
 
     //dynamics object
 
@@ -64,41 +46,17 @@ public class PlayScreen implements Screen {
     private Array<Enermy> listEnemies;
     private LinkedBlockingQueue<ItemDef> itemstoSpawn;
 
-    public  TiledMap getMap()
-    {
-        return  map;
-    }
 
-    public World getWorld()
-    {
-        return  world;
-
-    }
 
     public  PlayScreen(mariobros game){
-        atlas=new TextureAtlas("Mario_and_Enemies.pack");
-        this.game=game;
-        gameCam=new OrthographicCamera();
-        //gamePort=new ScreenViewport(gameCam);  //Sẽ phát sinh lỗi nếu màn hình có size lớn thì Camera sẽ lớn hơn, đã fix ở dưới
-        gamePort=new FitViewport(_width /PPM,_height/PPM,gameCam);
-        hud=new Hud(game.batch);
+        super(game);
 
         mapLoader=new TmxMapLoader();
         map=mapLoader.load("level1.tmx");
         renderer=new OrthogonalTiledMapRenderer(map,1/PPM);
-        gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
-        world=new World(new Vector2(0,-10),true);// "true" is make an object sleeping
-
-        b2dr=new Box2DDebugRenderer();
-
-        controller = new Controller();
-
+        creator=new B2WorldCreator(this);
         player=new Mario(this);
 
-        creator=new B2WorldCreator(this);
-
-
-        world.setContactListener(new WorldContactListener());
         music=mariobros.manager.get("audio/music/mario_music.ogg",Music.class);
         music.setLooping(true);
         music.play();
@@ -114,25 +72,24 @@ public class PlayScreen implements Screen {
         itemstoSpawn.add(itemDef);
     }
 
+
     public  void handleSpawningItem(){
         if (!itemstoSpawn.isEmpty()){
             ItemDef idef=itemstoSpawn.poll();
             if (idef.type==Mushroom.class){
                 items.add(new Mushroom(this,idef.position.x,idef.position.y));
 
+            }else if (idef.type==Flower.class){
+                items.add(new Flower(this,idef.position.x,idef.position.y));
             }
+
         }
 
     }
 
-    public  TextureAtlas   getAtlas()
-    {
-     return  atlas;
-
-    }
 
 
-    @Override
+     
     public void show() {
 
     }
@@ -241,7 +198,7 @@ public class PlayScreen implements Screen {
     }
 
 
-    @Override
+     
     public void render(float delta) {
 
         Update(delta);
@@ -250,18 +207,20 @@ public class PlayScreen implements Screen {
 
 
         renderer.render();
-        b2dr.render(world,gameCam.combined); // hiện boundingbox lên để kiểm tra va chạm
+        //b2dr.render(world,gameCam.combined); // hiện boundingbox lên để kiểm tra va chạm
         //draw hud riêng vì hud k chạy theo cam world
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
         player.draw(game.batch); //draw mario to the screen
         for (Enermy e: listEnemies)
         {
+            if (e.getX()<=gameCam.position.x-_width/2/PPM ||e.getX()>gameCam.position.x+_width/2/PPM ) continue;
             e.draw(game.batch);
 
         }
         for (Item item:items)
         {
+            if (item.getX()<=gameCam.position.x-_width/2/PPM ||item.getX()>gameCam.position.x+_width/2/PPM ) continue;
             item.draw(game.batch);
         }
         game.batch.end(); //close the box and draw it to the screen
@@ -284,6 +243,7 @@ public class PlayScreen implements Screen {
             gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
             controller.justPress=true;
             Gdx.app.log("[Dev]","reset Player");
+            return;
         }
         if (controller.isGrowPlayer() && !controller.justPress)
         {
@@ -291,6 +251,14 @@ public class PlayScreen implements Screen {
             player.growMarioforDev();
             controller.justPress=true;
             Gdx.app.log("[Dev]","grow Player");
+            return;
+        }
+        if (controller.isKill() && !controller.justPress)
+        {
+            player.killPlayer();
+            controller.justPress=true;
+            Gdx.app.log("[Dev]","kill Player");
+            return;
         }
         if (controller.isKill() && !controller.justPress)
         {
@@ -298,40 +266,16 @@ public class PlayScreen implements Screen {
             controller.justPress=true;
             Gdx.app.log("[Dev]","kill Player");
         }
+        if (controller.isImMortal() &&!controller.justPress)
+        {
+            player.setImMortalMario();
+            controller.justPress=true;
+        }
 
     }
 
-    @Override
-    public void resize(int width, int height)
-    {
-     gamePort.update(width,height);
-        controller.resize(width, height);
-    }
 
-    @Override
-    public void pause() {
 
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
-    map.dispose();
-    renderer.dispose();
-    world.dispose();
-    b2dr.dispose();
-    hud.dispose();
-
-    }
 
 
     public  boolean isGameOver(){
@@ -340,5 +284,10 @@ public class PlayScreen implements Screen {
             return  true;
         }
         return  false;
+    }
+
+    @Override
+    public void dispose() {
+        Gdx.app.log("Dispose","game");
     }
 }

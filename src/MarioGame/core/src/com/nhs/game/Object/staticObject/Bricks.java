@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.nhs.game.Object.GameObject;
 import com.nhs.game.Object.Player.Mario;
+import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.UiManager.Hud;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
@@ -13,7 +14,7 @@ import static com.nhs.game.Global.global.DISTROYED_BIT;
 
 public class Bricks extends GameObject {
     public  boolean isBreaking;
-    public Bricks(PlayScreen screen, MapObject object)
+    public Bricks(ScreenManagement screen, MapObject object)
     {
         super(screen,object);
         //set fixture để set va chạm trường hợp này lấy hết bbox

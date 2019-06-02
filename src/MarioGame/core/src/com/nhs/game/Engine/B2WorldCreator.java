@@ -19,6 +19,7 @@ import com.nhs.game.Object.staticObject.MapBound;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.Object.staticObject.Bricks;
 import com.nhs.game.Object.staticObject.Coins;
+import com.nhs.game.Screens.ScreenManagement;
 
 import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
@@ -38,7 +39,7 @@ public class B2WorldCreator {
         enermies.addAll(turtle);
         return  enermies;
     }
-    public B2WorldCreator(PlayScreen screen)
+    public B2WorldCreator(ScreenManagement screen)
      {
 
         World world=screen.getWorld();

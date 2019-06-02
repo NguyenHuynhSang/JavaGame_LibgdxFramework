@@ -1,10 +1,12 @@
 package com.nhs.game.Object.Items;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.mariobros;
@@ -17,11 +19,20 @@ import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
 
-public class Mushroom extends Item {
-    public Mushroom(PlayScreen screen, float x, float y) {
+public class Flower extends  Item {
+    private com.badlogic.gdx.utils.Array<TextureRegion> frames;
+
+
+    private Animation flowerAni;
+    public Flower(PlayScreen screen, float x, float y) {
         super(screen, x, y);
-        setRegion(screen.getAtlas().findRegion("Mushroom"),0,0,16,16);
-        velocity=new Vector2(0.5f,0);
+        frames=new Array<TextureRegion>();
+        for (int i=0;i<2;i++)
+        {
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("Flower"),i*16,0,16,16));
+        }
+
+        flowerAni=new Animation(0.4f,frames);
 
     }
 
@@ -40,11 +51,12 @@ public class Mushroom extends Item {
         // category để nhận biết đó là object nào
         // mask là các object và object đang xét có thể va chạm
         fdef.filter.categoryBits=ITEM_BIT;
-        fdef.filter.maskBits= GROUND_BIT |MARIO_BIT| COINS_BIT |BRICK_BIT|OBJECT_BIT;
+        fdef.filter.maskBits= MARIO_BIT| COINS_BIT;
         fdef.shape=shape;
         body.createFixture(fdef).setUserData(this);
 
     }
+
 
     @Override
     public void useItem(Mario mario) {
@@ -54,14 +66,14 @@ public class Mushroom extends Item {
             mario.Grow();
         }
         else
-        mariobros.manager.get("audio/sounds/lifeup.wav",Sound.class).play();
+            mariobros.manager.get("audio/sounds/lifeup.wav",Sound.class).play();
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
+        stateTimer+=dt;
         setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y-getHeight()/2);
-        velocity.y=body.getLinearVelocity().y;
-        body.setLinearVelocity(velocity);
+        setRegion( (TextureRegion)flowerAni.getKeyFrame(stateTimer,true));
     }
 }

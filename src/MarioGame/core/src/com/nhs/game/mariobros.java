@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Screens.ScreenManagement;
 
 import javax.lang.model.type.NullType;
 
@@ -55,14 +56,19 @@ public class mariobros extends Game {
 		super.dispose();
 		manager.dispose();
 		batch.dispose();
+		Gdx.app.log("Dispose","mariobro");
+
 	}
 
 	@Override
 	public void render () {
 
-		super.render();//delegate the render method to the playscreen class
+		super.render(); //delegate the render method to the playscreen class
 
 	}
-	
 
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width,height);
+	}
 }
