@@ -6,12 +6,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.nhs.game.Object.Player.Mario;
-import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Screens.PlayScreen.FirstScreen;
+import com.nhs.game.Screens.ScreenManagement;
 
 import static com.nhs.game.Global.global.PPM;
 
 public abstract  class Item extends Sprite {
-    protected PlayScreen screen;
+    protected ScreenManagement screen;
     protected World world;
     protected Vector2 velocity;
     protected boolean setDestroy=false;
@@ -19,7 +20,7 @@ public abstract  class Item extends Sprite {
     protected Body body;
     protected float stateTimer;
     public  boolean isDestroyed;
-    public  Item(PlayScreen screen,float x,float y){
+    public  Item(ScreenManagement screen, float x, float y){
         this.screen=screen;
         this.world=screen.getWorld();
         setPosition(x,y);

@@ -22,7 +22,7 @@ public class Controller {
     Viewport viewport;
     Stage stage;
     boolean upPressed, downPressed, leftPressed, rightPressed,firePressed;
-    boolean resetPress,growPress,killPress,imMortalPress;
+    boolean resetPress,growPress,killPress,imMortalPress,changeScreenPress,activeBodyPress;
     OrthographicCamera camera;
     public  boolean justPress;
     public Controller() {
@@ -59,9 +59,21 @@ public class Controller {
                         killPress=true;
                         Gdx.app.log("Press"," E");
                         break;
-                    case Input.Keys.D:
+                    case Input.Keys.F:
+                        firePressed=true;
+                        Gdx.app.log("Press","  F");
+                        break;
+                    case Input.Keys.H:
                         imMortalPress=true;
-                        Gdx.app.log("Press"," D");
+                        Gdx.app.log("Press"," H");
+                        break;
+                    case Input.Keys.A:
+                        changeScreenPress=true;
+                        Gdx.app.log("Press"," A");
+                        break;
+                    case Input.Keys.G:
+                        activeBodyPress=true;
+                        Gdx.app.log("Press"," G");
                         break;
 
                 }
@@ -102,8 +114,18 @@ public class Controller {
                         justPress=false;
                         // Gdx.app.log("Press"," E");
                         break;
-                    case Input.Keys.D:
+                    case Input.Keys.H:
                         imMortalPress=false;
+                        justPress=false;
+                        // Gdx.app.log("Press"," E");
+                        break;
+                    case Input.Keys.A:
+                        changeScreenPress=false;
+                        justPress=false;
+                        // Gdx.app.log("Press"," E");
+                        break;
+                    case Input.Keys.G:
+                        activeBodyPress=false;
                         justPress=false;
                         // Gdx.app.log("Press"," E");
                         break;
@@ -116,7 +138,7 @@ public class Controller {
 
 
 
-        Image upImg = new Image(new Texture("flatDark25.png"));
+        Image upImg = new Image(new Texture("btnup.png"));
         upImg.setSize(50, 50);
         upImg.addListener(new InputListener() {
 
@@ -150,7 +172,7 @@ public class Controller {
             }
         });
 
-        Image rightImg = new Image(new Texture("flatDark24.png"));
+        Image rightImg = new Image(new Texture("btnright.png"));
         rightImg.setSize(50, 50);
         rightImg.addListener(new InputListener() {
 
@@ -167,7 +189,7 @@ public class Controller {
             }
         });
 
-        Image leftImg = new Image(new Texture("flatDark23.png"));
+        Image leftImg = new Image(new Texture("btnleft.png"));
         leftImg.setSize(50, 50);
         leftImg.addListener(new InputListener() {
 
@@ -218,7 +240,7 @@ public class Controller {
 
         table1.left().bottom();
         table1.add();
-        table1.pad(0,0,10,0);
+        table1.pad(0,20,10,0);
         table1.add().size(upImg.getWidth()/2, upImg.getHeight()/2);
         table1.row();
         table1.add(leftImg).size(rightImg.getWidth()/2, rightImg.getHeight()/2);
@@ -273,6 +295,10 @@ public class Controller {
 
     public  boolean isImMortal(){return imMortalPress;}
 
+
+    public  boolean isChangeScreen(){return changeScreenPress;}
+
+    public  boolean isActiveBodyPress(){return activeBodyPress;}
     public void resize(int width, int height){
         viewport.update(width, height);
     }

@@ -3,6 +3,7 @@ package com.nhs.game.Object.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -19,7 +20,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Object.Enermy.Enermy;
 import com.nhs.game.Object.Enermy.Turtle;
-import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Object.Player.weapon.FireBall;
 import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
 
@@ -66,11 +67,11 @@ public class Mario extends Sprite {
 
 
     private Array<FireBall> fireballs;
-
-    public  Mario(ScreenManagement screen)
+    public  Mario(ScreenManagement screen,float x,float y)
     {
         this.screen= screen;
         this.world=(screen).getWorld();
+        setPosition(x,y);
         defineMario();
         currentState=State.STANDDING;
         preState=State.STANDDING;
@@ -79,7 +80,7 @@ public class Mario extends Sprite {
         isTouchGround=false;
         imMortalMario=false;
         Array<TextureRegion> frames=new Array<TextureRegion>();
-        for (int i=1;i<4;i++)
+        for (int i=1;i<5;i++)
         {
             frames.add(new TextureRegion((screen.getAtlas().findRegion("Mario_small")),i*16,0,16,16));
         }
@@ -88,7 +89,7 @@ public class Mario extends Sprite {
         frames.clear();
         for (int i=1;i<4;i++)
         {
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("Mario_big"),i*16,0,16,32));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("mario_big1"),i*20,0,20,32));
         }
 
         bigMarioRun=new Animation(0.1f,frames);
@@ -97,18 +98,18 @@ public class Mario extends Sprite {
         marioDead=new TextureRegion(screen.getAtlas().findRegion("Mario_small"),96,0,16,16);
 
         marioJump=new TextureRegion(screen.getAtlas().findRegion("Mario_small"),80,0,16,16);
-        bigMarioJump=new TextureRegion(screen.getAtlas().findRegion("Mario_big"),80,0,16,32);
+        bigMarioJump=new TextureRegion(screen.getAtlas().findRegion("mario_big1"),80,0,16,32);
 
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("Mario_big"),240,0,16,32));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("Mario_big"),0,0,16,32));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("Mario_big"),240,0,16,32));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("Mario_big"),0,0,16,32));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("mario_big1"),0,0,16,32));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("mario_big1"),0,0,16,32));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("mario_big1"),0,0,16,32));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("mario_big1"),0,0,16,32));
 
         growMario=new Animation(0.2f,frames);
 
 
-        marioStand=new TextureRegion(screen.getAtlas().findRegion("Mario_small"),0,0,16,16);
-        bigMarioStand=new TextureRegion(screen.getAtlas().findRegion("Mario_big"),0,0,16,32);
+        marioStand=new TextureRegion(screen.getAtlas().findRegion("Mario_small"),80,0,16,16);
+        bigMarioStand=new TextureRegion(screen.getAtlas().findRegion("mario_big1"),0,0,16,32);
         setBounds(0,0,16/PPM,14/PPM);
         setRegion(marioStand);
         hitGround=false;
@@ -225,7 +226,7 @@ public class Mario extends Sprite {
             world.destroyBody(b2body);
         }
         BodyDef bdef=new BodyDef();
-        bdef.position.set(32/PPM,32/PPM);
+        bdef.position.set(getX(),getY());
         bdef.type=BodyDef.BodyType.DynamicBody;
         b2body=world.createBody(bdef);
         FixtureDef fdef=new FixtureDef();
@@ -285,7 +286,6 @@ public class Mario extends Sprite {
         shape.setPosition(new Vector2(0,-15/PPM));
         b2body.createFixture(fdef).setUserData(this);
         //Create sensor call head to check the collision between mario's head and brick or coins,stuffs...
-
         EdgeShape head=new EdgeShape();
         head.set(new Vector2(-2/PPM,6/PPM ),new Vector2(2/PPM,6/PPM ));
         fdef.filter.categoryBits = MARIO_HEAD_BIT ;
@@ -407,7 +407,9 @@ public class Mario extends Sprite {
     }
 
 
+
     public void draw(Batch batch){
+
         super.draw(batch);
         for(FireBall ball : fireballs)
             ball.draw(batch);
@@ -422,6 +424,10 @@ public class Mario extends Sprite {
             imMortalMario=true;
             Gdx.app .log("[DEV]"," Mario is immortal now");
         }
+    }
+
+    public  void setBodySleep(){
+        b2body.setActive(!b2body.isActive());
     }
 
 }

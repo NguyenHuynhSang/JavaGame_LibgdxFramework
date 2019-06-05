@@ -1,33 +1,30 @@
-package com.nhs.game.Screens;
+package com.nhs.game.Screens.PlayScreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.nhs.game.Engine.B2WorldCreator;
+import com.nhs.game.Object.Effect.EffectDef;
+import com.nhs.game.Object.Effect.Effects;
+import com.nhs.game.Object.Effect.FlippingCoin;
 import com.nhs.game.Object.Enermy.Enermy;
+import com.nhs.game.Object.Items.Coins;
 import com.nhs.game.Object.Items.Flower;
 import com.nhs.game.Object.Items.Item;
 import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Items.Mushroom;
-import com.nhs.game.UiManager.Hud;
 import com.nhs.game.Object.Player.Mario;
-import com.nhs.game.Engine.B2WorldCreator;
-import com.nhs.game.Engine.Controller;
-import com.nhs.game.Engine.WorldContactListener;
+import com.nhs.game.Screens.MenuScreen.GameOver;
+import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
 
+import java.util.LinkedList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import static com.nhs.game.Global.global.PPM;
@@ -36,66 +33,33 @@ import static com.nhs.game.Global.global._mapWidth;
 import static com.nhs.game.Global.global._mapWidthX2;
 import static com.nhs.game.Global.global._width;
 
-public class PlayScreen extends ScreenManagement {
-
-    //dynamics object
+public class SecondScreen extends ScreenManagement {
 
     private Mario player;
-
-    private Array<Item> items;
     private Array<Enermy> listEnemies;
-    private LinkedBlockingQueue<ItemDef> itemstoSpawn;
 
 
-
-    public  PlayScreen(mariobros game){
+    public SecondScreen(mariobros game) {
         super(game);
-
         mapLoader=new TmxMapLoader();
-        map=mapLoader.load("level1.tmx");
+        map=mapLoader.load("map2.tmx");
         renderer=new OrthogonalTiledMapRenderer(map,1/PPM);
         creator=new B2WorldCreator(this);
-        player=new Mario(this);
-
         music=mariobros.manager.get("audio/music/mario_music.ogg",Music.class);
         music.setLooping(true);
         music.play();
 
+        player=creator.getPlayer();
         listEnemies =creator.getEnermy();
-        items=new Array<Item>();
-        itemstoSpawn=new LinkedBlockingQueue<ItemDef>();
-
-    }
-
-
-    public  void spawnItem(ItemDef itemDef){
-        itemstoSpawn.add(itemDef);
-    }
-
-
-    public  void handleSpawningItem(){
-        if (!itemstoSpawn.isEmpty()){
-            ItemDef idef=itemstoSpawn.poll();
-            if (idef.type==Mushroom.class){
-                items.add(new Mushroom(this,idef.position.x,idef.position.y));
-
-            }else if (idef.type==Flower.class){
-                items.add(new Flower(this,idef.position.x,idef.position.y));
-            }
-
-        }
-
     }
 
 
 
-     
     public void show() {
 
     }
 
-    private  boolean isPress=false;
-
+    // báº¯t sá»± ki phims
     public  void handleInput(float dt)
     {
 
@@ -108,20 +72,20 @@ public class PlayScreen extends ScreenManagement {
         if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0)
         {
 
-            player.b2body.applyLinearImpulse(new Vector2(0,3.8f),player.b2body.getWorldCenter(),true);
+            player.b2body.applyLinearImpulse(new Vector2(0,3.5f),player.b2body.getWorldCenter(),true);
             if (player.isBig==true)
-                 mariobros.manager.get("audio/sounds/bigjump.wav",Sound.class).play();
+                mariobros.manager.get("audio/sounds/bigjump.wav",Sound.class).play();
             else
                 mariobros.manager.get("audio/sounds/jump.wav",Sound.class).play();
             player.hitGround=false;
         }
-        if (controller.isRightPressed()&& player.b2body.getLinearVelocity().x<=1.2)
+        if (controller.isRightPressed()&& player.b2body.getLinearVelocity().x<=1.5)
         {
-            player.b2body.applyLinearImpulse(new Vector2(0.1f,0),player.b2body.getWorldCenter(),true);
+            player.b2body.applyLinearImpulse(new Vector2(0.2f,0),player.b2body.getWorldCenter(),true);
         }
-        if (controller.isLeftPressed()&& player.b2body.getLinearVelocity().x>=-1.2)
+        if (controller.isLeftPressed()&& player.b2body.getLinearVelocity().x>=-1.5)
         {
-            player.b2body.applyLinearImpulse(new Vector2(-0.1f,0),player.b2body.getWorldCenter(),true);
+            player.b2body.applyLinearImpulse(new Vector2(-0.2f,0),player.b2body.getWorldCenter(),true);
         }
 
         if (controller.isFirePressed())
@@ -137,13 +101,13 @@ public class PlayScreen extends ScreenManagement {
 
 
 
-       // if (Gdx.input.isTouched() &&player.b2body.getLinearVelocity().x<=1.2)  {
+        // if (Gdx.input.isTouched() &&player.b2body.getLinearVelocity().x<=1.2)  {
         //    player.b2body.applyLinearImpulse(new Vector2(0.1f,0),player.b2body.getWorldCenter(),true);
         //}
         //if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && player.b2body.getLinearVelocity().y==0)
         //{
-         //   player.b2body.applyLinearImpulse(new Vector2(0,3.8f),player.b2body.getWorldCenter(),true);
-         //   mariobros.manager.get("audio/sounds/jump.wav",Sound.class).play();
+        //   player.b2body.applyLinearImpulse(new Vector2(0,3.8f),player.b2body.getWorldCenter(),true);
+        //   mariobros.manager.get("audio/sounds/jump.wav",Sound.class).play();
         //}
 
         //if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) &&player.b2body.getLinearVelocity().x<=1.2)
@@ -154,7 +118,7 @@ public class PlayScreen extends ScreenManagement {
         //if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x>=-1.2)
         //{
         //    player.b2body.applyLinearImpulse(new Vector2(-0.1f,0),player.b2body.getWorldCenter(),true);
-       // }
+        // }
 
 
 
@@ -164,6 +128,7 @@ public class PlayScreen extends ScreenManagement {
     {
         handleInput(dt);
         handleSpawningItem();
+        handleSpawningEffects();
         world.step(1/50f,6,2);
         player.Update(dt);
         for (Enermy e:listEnemies)
@@ -178,7 +143,6 @@ public class PlayScreen extends ScreenManagement {
                 e.b2body.setActive(true);
         }
 
-
         for (Item item:items)
         {
 
@@ -188,17 +152,25 @@ public class PlayScreen extends ScreenManagement {
             }
             item.update(dt);
         }
+        for (Effects e:effects)
+        {
+
+            if (e.isDestroyed){
+                effects.removeValue(e,true);
+                continue;
+            }
+            e.update(dt);
+        }
         hud.Update(dt);
         //stop cam when mario was dead
         if (player.b2body.getPosition().x>(_mapWidth+_width/2)/PPM&&player.b2body.getPosition().x<(_mapWidthX2-_width/2)/PPM &&player.currentState!=Mario.State.DEAD)
-        gameCam.position.x=player.b2body.getPosition().x;
+            gameCam.position.x=player.b2body.getPosition().x;
         gameCam.update();
         renderer.setView(gameCam);// set vi tri ve map
-
     }
 
 
-     
+
     public void render(float delta) {
 
         Update(delta);
@@ -207,8 +179,8 @@ public class PlayScreen extends ScreenManagement {
 
 
         renderer.render();
-        //b2dr.render(world,gameCam.combined); // hiện boundingbox lên để kiểm tra va chạm
-        //draw hud riêng vì hud k chạy theo cam world
+        //b2dr.render(world,gameCam.combined); // hiá»‡n boundingbox lÃªn Ä‘á»ƒ kiá»ƒm tra va cháº¡m
+        //draw hud riÃªng vÃ¬ hud k cháº¡y theo cam world
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
         player.draw(game.batch); //draw mario to the screen
@@ -223,6 +195,13 @@ public class PlayScreen extends ScreenManagement {
             if (item.getX()<=gameCam.position.x-_width/2/PPM ||item.getX()>gameCam.position.x+_width/2/PPM ) continue;
             item.draw(game.batch);
         }
+
+        for (Effects e:effects)
+        {
+            if (e.getX()<=gameCam.position.x-_width/2/PPM ||e.getX()>gameCam.position.x+_width/2/PPM ) continue;
+            e.draw(game.batch);
+        }
+
         game.batch.end(); //close the box and draw it to the screen
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
@@ -265,17 +244,31 @@ public class PlayScreen extends ScreenManagement {
             player.killPlayer();
             controller.justPress=true;
             Gdx.app.log("[Dev]","kill Player");
+            return;
         }
         if (controller.isImMortal() &&!controller.justPress)
         {
             player.setImMortalMario();
             controller.justPress=true;
+            return;
+        }
+        if (controller.isChangeScreen()&&!controller.justPress)
+        {
+            Gdx.app.log("[DEV]","change screen");
+
+            changeScreen();
+
+            return;
+
         }
 
     }
 
 
-
+    private  void changeScreen(){
+        dispose();
+        game.setScreen(new UnderGroundScreen(game));
+    }
 
 
     public  boolean isGameOver(){
@@ -286,8 +279,8 @@ public class PlayScreen extends ScreenManagement {
         return  false;
     }
 
-    @Override
+
     public void dispose() {
-        Gdx.app.log("Dispose","game");
+
     }
 }

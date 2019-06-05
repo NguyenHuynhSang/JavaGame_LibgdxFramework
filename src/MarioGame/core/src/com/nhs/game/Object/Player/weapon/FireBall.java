@@ -1,4 +1,4 @@
-package com.nhs.game.Object.Player;
+package com.nhs.game.Object.Player.weapon;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -10,7 +10,6 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.Screens.ScreenManagement;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
@@ -37,13 +36,11 @@ public class FireBall extends Sprite {
         this.screen = screen;
         this.world = screen.getWorld();
         frames = new Array<TextureRegion>();
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("FireBall"), 0, 0, 8, 8));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("FireBall"), 8, 0, 8, 8));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("FireBall"),  0, 8, 8, 8));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("FireBall"),  8, 8, 8, 8));
+        for (int i=0;i<4;i++)
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("fireball"), i*8, 0, 8, 8));
         fireAnimation = new Animation(0.2f, frames);
         setRegion((TextureRegion) fireAnimation.getKeyFrame(0));
-        setBounds(x, y, 6 / PPM, 6 / PPM);
+        setBounds(x, y, 8/ PPM, 8 / PPM);
         defineFireBall();
         isDestroyed=false;
     }
@@ -92,10 +89,5 @@ public class FireBall extends Sprite {
     public boolean isDestroyed(){
         return destroyed;
     }
-
-
-
-
-
 
 }

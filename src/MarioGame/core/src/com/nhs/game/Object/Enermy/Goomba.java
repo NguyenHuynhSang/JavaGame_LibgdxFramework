@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Object.Player.Mario;
-import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
 
@@ -35,21 +34,20 @@ public class Goomba extends Enermy
     private Animation wallAnimation;
     private com.badlogic.gdx.utils.Array<TextureRegion> frames;
     private boolean setDestroy;
-    private boolean Destroyed;
     public Goomba(ScreenManagement screen, float x, float y) {
         super(screen, x, y);
 
         frames=new Array<TextureRegion>();
         for (int i=0;i<2;i++)
         {
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("Goomba"),i*16,0,16,16));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("goomba"),i*16,0,16,16));
         }
 
         wallAnimation=new Animation(0.4f,frames);
         stateTime=0;
         setBounds(getX(),getY(),16/PPM,16/PPM);
         setDestroy=false;
-        Destroyed=false;
+        eDestroyed=false;
 
 
     }
@@ -57,14 +55,14 @@ public class Goomba extends Enermy
     public void update(float dt)
     {
         stateTime+=dt;
-        if (setDestroy && !Destroyed)
+        if (setDestroy && !eDestroyed)
         {
             world.destroyBody(b2body);
-            Destroyed=true;
-            setRegion(new TextureRegion(screen.getAtlas().findRegion("Goomba"),32,0,16,16));
+            eDestroyed=true;
+            setRegion(new TextureRegion(screen.getAtlas().findRegion("goomba"),32,0,16,16));
             stateTime=0;
 
-        } else if (!Destroyed)
+        } else if (!eDestroyed)
         {
 
             setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-getHeight()/2);
@@ -130,7 +128,7 @@ public class Goomba extends Enermy
     }
 
     public  void draw(Batch batch){
-        if (!Destroyed ||stateTime<1)
+        if (!eDestroyed ||stateTime<1)
         {
             super.draw(batch);
 
@@ -150,12 +148,15 @@ public class Goomba extends Enermy
 
     @Override
     public void onEnermyHit(Enermy enermy) {
-        Gdx.app.log("Coll","Turtle with goomba");
+       // Gdx.app.log("Coll","Turtle with goomba");
         if(enermy instanceof  Turtle &&((Turtle)enermy).currentState==Turtle.State.MOVING_SHELL)
         {
             Gdx.app.log("Coll","Turtle with goomba");
             setDestroy=true;
             mariobros.manager.get("audio/sounds/stomp.wav",Sound.class).play();
+        }
+        else {
+            reverseVelocity(true,false);
         }
     }
 

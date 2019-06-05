@@ -6,7 +6,8 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.nhs.game.Object.Player.Mario;
-import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Screens.PlayScreen.FirstScreen;
+import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
@@ -18,9 +19,9 @@ import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
 
 public class Mushroom extends Item {
-    public Mushroom(PlayScreen screen, float x, float y) {
+    public Mushroom(ScreenManagement screen, float x, float y) {
         super(screen, x, y);
-        setRegion(screen.getAtlas().findRegion("Mushroom"),0,0,16,16);
+        setRegion(screen.getAtlas().findRegion("mushroom"),0,0,16,16);
         velocity=new Vector2(0.5f,0);
 
     }

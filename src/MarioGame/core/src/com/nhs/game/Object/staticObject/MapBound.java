@@ -3,7 +3,6 @@ package com.nhs.game.Object.staticObject;
 import com.badlogic.gdx.maps.MapObject;
 import com.nhs.game.Object.GameObject;
 import com.nhs.game.Object.Player.Mario;
-import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.Screens.ScreenManagement;
 
 import static com.nhs.game.Global.global.MAPZONE_BIT;

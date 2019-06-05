@@ -17,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.nhs.game.Object.Enermy.Enermy;
 import com.nhs.game.Object.GameObject;
 import com.nhs.game.Object.Items.Item;
-import com.nhs.game.Object.Player.FireBall;
+import com.nhs.game.Object.Player.weapon.FireBall;
 import com.nhs.game.Object.Player.Mario;
 
 import static com.nhs.game.Global.global.BRICK_BIT;

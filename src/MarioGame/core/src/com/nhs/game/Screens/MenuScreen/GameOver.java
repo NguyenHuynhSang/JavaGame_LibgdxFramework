@@ -1,4 +1,4 @@
-package com.nhs.game.Screens;
+package com.nhs.game.Screens.MenuScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.nhs.game.Engine.Controller;
+import com.nhs.game.Screens.PlayScreen.FirstScreen;
 import com.nhs.game.mariobros;
 
 import static com.nhs.game.Global.global._height;
@@ -19,7 +21,7 @@ import static com.nhs.game.Global.global._width;
 public class GameOver implements Screen {
     private Viewport viewport;
     private Stage   stage;
-
+    private Controller gameController;
     private Game game;
     public  GameOver(Game game){
         this.game=game;
@@ -47,7 +49,7 @@ public class GameOver implements Screen {
     @Override
     public void render(float delta) {
         if (Gdx.input.justTouched()) {
-            game.setScreen(new PlayScreen((mariobros)game));
+            game.setScreen(new FirstScreen((mariobros)game));
             dispose();
         }
         Gdx.gl.glClearColor(0,0,0,1);

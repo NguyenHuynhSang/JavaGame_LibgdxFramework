@@ -1,0 +1,131 @@
+
+mariobro.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+score
+  rotate: false
+  xy: 1, 55
+  size: 160, 8
+  orig: 160, 8
+  offset: 0, 0
+  index: -1
+turtle
+  rotate: false
+  xy: 1, 26
+  size: 128, 27
+  orig: 128, 27
+  offset: 0, 0
+  index: -1
+mario_big1
+  rotate: false
+  xy: 163, 31
+  size: 120, 32
+  orig: 120, 32
+  offset: 0, 0
+  index: -1
+mario_big2
+  rotate: false
+  xy: 285, 31
+  size: 120, 32
+  orig: 120, 32
+  offset: 0, 0
+  index: -1
+Mario_Fire_Swim_Right
+  rotate: false
+  xy: 131, 1
+  size: 76, 28
+  orig: 76, 28
+  offset: 0, 0
+  index: -1
+Mario_small
+  rotate: false
+  xy: 407, 47
+  size: 96, 16
+  orig: 96, 16
+  offset: 0, 0
+  index: -1
+Mario_Big_Swim_Right
+  rotate: false
+  xy: 209, 2
+  size: 76, 27
+  orig: 76, 27
+  offset: 0, 0
+  index: -1
+coinbox
+  rotate: false
+  xy: 1, 8
+  size: 80, 16
+  orig: 80, 16
+  offset: 0, 0
+  index: -1
+coin
+  rotate: false
+  xy: 505, 47
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
+flippingcoin
+  rotate: false
+  xy: 287, 13
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
+flower
+  rotate: false
+  xy: 571, 47
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
+goomba
+  rotate: false
+  xy: 637, 47
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
+Mario_Small_Swim_Right
+  rotate: false
+  xy: 703, 47
+  size: 64, 16
+  orig: 64, 16
+  offset: 0, 0
+  index: -1
+eatflower
+  rotate: false
+  xy: 769, 31
+  size: 50, 32
+  orig: 50, 32
+  offset: 0, 0
+  index: -1
+mushroom
+  rotate: false
+  xy: 83, 8
+  size: 32, 16
+  orig: 32, 16
+  offset: 0, 0
+  index: -1
+fireball
+  rotate: false
+  xy: 287, 3
+  size: 32, 8
+  orig: 32, 8
+  offset: 0, 0
+  index: -1
+brick
+  rotate: false
+  xy: 131, 37
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+particle_brick
+  rotate: false
+  xy: 1, 1
+  size: 5, 5
+  orig: 5, 5
+  offset: 0, 0
+  index: -1

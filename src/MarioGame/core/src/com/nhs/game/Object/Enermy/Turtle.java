@@ -12,7 +12,6 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Object.Player.Mario;
-import com.nhs.game.Screens.PlayScreen;
 import com.nhs.game.Screens.ScreenManagement;
 
 import static com.nhs.game.Global.global.BRICK_BIT;
@@ -42,9 +41,9 @@ public class Turtle extends  Enermy {
 
         super(screen, x, y);
         frames=new Array<TextureRegion>();
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("Koopa"),0,0,16,32));
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("Koopa"),16,0,16,32));
-        shell=new TextureRegion(screen.getAtlas().findRegion("Koopa"),64,0,16,32);
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"),0,0,16,27));
+        frames.add(new TextureRegion(screen.getAtlas().findRegion("turtle"),16,0,16,27));
+        shell=new TextureRegion(screen.getAtlas().findRegion("turtle"),64,0,16,27);
         wallAnimation=new Animation(0.2f,frames);
         currentState=preState=State.WALKING;
         setBounds(getX(),getY(),16/PPM,32/PPM);
@@ -166,6 +165,7 @@ public class Turtle extends  Enermy {
         } else if(currentState!=State.MOVING_SHELL){
             reverseVelocity(true,false);
         }
+
 
     }
 

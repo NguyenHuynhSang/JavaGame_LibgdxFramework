@@ -1,18 +1,12 @@
 package com.nhs.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.nhs.game.Screens.PlayScreen;
-import com.nhs.game.Screens.ScreenManagement;
-
-import javax.lang.model.type.NullType;
+import com.nhs.game.Screens.PlayScreen.FirstScreen;
 
 public class mariobros extends Game {
 
@@ -48,7 +42,7 @@ public class mariobros extends Game {
 		manager.load("audio/sounds/bigjump.wav",Sound.class);
 		manager.load("audio/sounds/stomp.wav",Sound.class);
 		manager.finishLoading();
-		setScreen(new PlayScreen(this));
+		setScreen(new FirstScreen(this));
 	}
 
 	@Override

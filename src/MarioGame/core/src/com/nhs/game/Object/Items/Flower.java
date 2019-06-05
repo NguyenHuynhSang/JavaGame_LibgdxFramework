@@ -8,28 +8,25 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Object.Player.Mario;
-import com.nhs.game.Screens.PlayScreen;
+import com.nhs.game.Screens.PlayScreen.FirstScreen;
+import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
 
-import static com.nhs.game.Global.global.BRICK_BIT;
 import static com.nhs.game.Global.global.COINS_BIT;
-import static com.nhs.game.Global.global.GROUND_BIT;
 import static com.nhs.game.Global.global.ITEM_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
-import static com.nhs.game.Global.global.OBJECT_BIT;
 import static com.nhs.game.Global.global.PPM;
 
 public class Flower extends  Item {
+
     private com.badlogic.gdx.utils.Array<TextureRegion> frames;
-
-
     private Animation flowerAni;
-    public Flower(PlayScreen screen, float x, float y) {
+    public Flower(ScreenManagement screen, float x, float y) {
         super(screen, x, y);
         frames=new Array<TextureRegion>();
-        for (int i=0;i<2;i++)
+        for (int i=0;i<4;i++)
         {
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("Flower"),i*16,0,16,16));
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("flower"),i*16,0,16,16));
         }
 
         flowerAni=new Animation(0.4f,frames);
@@ -75,5 +72,6 @@ public class Flower extends  Item {
         stateTimer+=dt;
         setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y-getHeight()/2);
         setRegion( (TextureRegion)flowerAni.getKeyFrame(stateTimer,true));
+
     }
 }
