@@ -2,6 +2,7 @@ package com.nhs.game.Object.Items;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -33,7 +34,7 @@ public class Coins extends  Item {
             frames.add(new TextureRegion(screen.getAtlas().findRegion("coin"),i*16,0,16,16));
         }
         coinAni=new Animation(0.1f,frames);
-
+        setRegion( (TextureRegion)coinAni.getKeyFrame(0));
     }
 
     @Override
@@ -54,6 +55,7 @@ public class Coins extends  Item {
         fdef.filter.maskBits= MARIO_BIT|GROUND_BIT;
         fdef.shape=shape;
         body.createFixture(fdef).setUserData(this);
+        shape.dispose();
       //  body.setLinearVelocity(0,0f);
         body.setGravityScale(0);
 
@@ -75,11 +77,17 @@ public class Coins extends  Item {
 
 
         super.update(dt);
-
+        if (Destroyed) return;
         stateTimer+=dt;
-       setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y-getHeight()/2);
+        setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y-getHeight()/2);
         setRegion( (TextureRegion)coinAni.getKeyFrame(stateTimer,true));
 
 
+    }
+
+    @Override
+    public void draw(Batch batch) {
+        if(!Destroyed)
+        super.draw(batch);
     }
 }

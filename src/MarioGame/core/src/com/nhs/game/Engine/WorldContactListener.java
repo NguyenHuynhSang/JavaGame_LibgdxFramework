@@ -29,7 +29,7 @@ import static com.nhs.game.Global.global.FIREBALL_BIT;
 import static com.nhs.game.Global.global.ITEM_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.MARIO_HEAD_BIT;
-import static com.nhs.game.Global.global.OBJECT_BIT;
+import static com.nhs.game.Global.global.PIPE_BIT;
 
 public class WorldContactListener implements ContactListener {
     @Override
@@ -63,20 +63,30 @@ public class WorldContactListener implements ContactListener {
                   ((GameObject)fixtureA.getUserData()).isHeadHit((Mario)fixtureB.getUserData());
                 }
                 break;
-
+            case MARIO_BIT|PIPE_BIT:{
+                if (fixtureA.getFilterData().categoryBits==MARIO_BIT)
+                {
+                    ((GameObject)fixtureB.getUserData()).isNextScene((Mario) fixtureA.getUserData());
+                }
+                else
+                {
+                    ((GameObject)fixtureA.getUserData()).isNextScene((Mario)fixtureB.getUserData());
+                }
+                break;
+            }
             case ENERMY_HEAD_BIT| MARIO_BIT:
                 if (fixtureA.getFilterData().categoryBits==ENERMY_HEAD_BIT)
                     ((Enermy)fixtureA.getUserData()).hitOnHead((Mario)fixtureB.getUserData());
                 else
                     ((Enermy)fixtureB.getUserData()).hitOnHead((Mario)fixtureA.getUserData());
                 break;
-            case ENERMY_BIT|OBJECT_BIT:
+            case ENERMY_BIT| PIPE_BIT:
                 if (fixtureA.getFilterData().categoryBits==ENERMY_BIT)
                     ((Enermy)fixtureA.getUserData()).reverseVelocity(true,false);
                 else
                     ((Enermy)fixtureB.getUserData()).reverseVelocity(true,false);
                 break;
-            //fcase FIREBALL_BIT|OBJECT_BIT:
+            //fcase FIREBALL_BIT|PIPE_BIT:
             case FIREBALL_BIT | ENERMY_BIT:
                 if(fixtureA.getFilterData().categoryBits == FIREBALL_BIT)
                 {
@@ -127,7 +137,7 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
             }
-            case ITEM_BIT|OBJECT_BIT:
+            case ITEM_BIT| PIPE_BIT:
                 if (fixtureA.getFilterData().categoryBits==ITEM_BIT)
                     ((Item)fixtureA.getUserData()).reverseVelocity(true,false);
                 else

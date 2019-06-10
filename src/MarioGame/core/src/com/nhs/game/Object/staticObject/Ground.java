@@ -21,6 +21,10 @@ public class Ground extends GameObject {
         fixture.setUserData(this);
         setCategoryFilter(GROUND_BIT);
     }
+    @Override
+    public void isNextScene(Mario mario) {
+
+    }
 
 
 }

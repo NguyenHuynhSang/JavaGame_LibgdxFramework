@@ -1,5 +1,6 @@
 package com.nhs.game.Object.staticObject;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
@@ -45,6 +46,7 @@ public class Bricks extends GameObject {
 
         if(object.getProperties().containsKey("coin") &&countCoin!=0)
         {
+
             ((screen)).spawnEffect(new EffectDef(new Vector2(body.getPosition().x,body.getPosition().y+16/PPM),
                     FlippingCoin.class));
             Hud.UpdateScore(100);
@@ -59,6 +61,7 @@ public class Bricks extends GameObject {
         //Gdx.app.log("Bricks","[Collision]");
         if (mario.isBig)
         {
+            Gdx.app.log("Brick spawn eff","pos X="+body.getPosition().x+":posY="+body.getPosition().y);
             (screen).spawnEffect(new EffectDef(new Vector2(body.getPosition().x,body.getPosition().y+16/PPM),
                     BreakingBrick.class));
             setCategoryFilter(DISTROYED_BIT);
@@ -73,5 +76,9 @@ public class Bricks extends GameObject {
 
     }
 
+    @Override
+    public void isNextScene(Mario mario) {
+
+    }
 
 }

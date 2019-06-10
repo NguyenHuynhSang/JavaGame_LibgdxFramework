@@ -34,7 +34,6 @@ public abstract class Effects extends Sprite {
         defineEffect();
         stateTimer=0;
 
-
     }
 
     public   void update(float dt){
@@ -47,16 +46,9 @@ public abstract class Effects extends Sprite {
         }
 
 
-    };
-    public  void draw(Batch batch)
-    {
-
-        if (!Destroyed) {
-
-            super.draw(batch);
-        }
-
     }
+
+//
     protected abstract void defineEffect();
 
     public  void destroy(){

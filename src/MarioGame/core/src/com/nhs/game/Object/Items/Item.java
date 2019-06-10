@@ -36,8 +36,11 @@ public abstract  class Item extends Sprite {
     public  abstract  void useItem(Mario mario);
 
     public  void update(float dt){
+        if (Destroyed) return;
         if (setDestroy && !Destroyed){
+            body.setUserData(null);
             world.destroyBody(body);
+            body=null;
             Destroyed=true;
             isDestroyed=true;
             stateTimer=0;
@@ -45,7 +48,7 @@ public abstract  class Item extends Sprite {
         }
 
         }
-
+     @Override
     public  void draw(Batch batch)
     {
 

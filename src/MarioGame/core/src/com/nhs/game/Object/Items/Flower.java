@@ -2,6 +2,7 @@ package com.nhs.game.Object.Items;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -30,7 +31,7 @@ public class Flower extends  Item {
         }
 
         flowerAni=new Animation(0.4f,frames);
-
+        setRegion( (TextureRegion)flowerAni.getKeyFrame(0));
     }
 
     @Override
@@ -51,7 +52,7 @@ public class Flower extends  Item {
         fdef.filter.maskBits= MARIO_BIT| COINS_BIT;
         fdef.shape=shape;
         body.createFixture(fdef).setUserData(this);
-
+        shape.dispose();
     }
 
 
@@ -69,9 +70,15 @@ public class Flower extends  Item {
     @Override
     public void update(float dt) {
         super.update(dt);
+        if (Destroyed) return;
         stateTimer+=dt;
         setPosition(body.getPosition().x-getWidth()/2,body.getPosition().y-getHeight()/2);
         setRegion( (TextureRegion)flowerAni.getKeyFrame(stateTimer,true));
 
+    }
+
+    @Override
+    public void draw(Batch batch) {
+        if(!Destroyed)super.draw(batch);
     }
 }

@@ -17,7 +17,7 @@ import static com.nhs.game.Global.global.COINS_BIT;
 import static com.nhs.game.Global.global.ENERMY_BIT;
 import static com.nhs.game.Global.global.FIREBALL_BIT;
 import static com.nhs.game.Global.global.GROUND_BIT;
-import static com.nhs.game.Global.global.OBJECT_BIT;
+import static com.nhs.game.Global.global.PIPE_BIT;
 import static com.nhs.game.Global.global.PPM;
 
 public class FireBall extends Sprite {
@@ -31,7 +31,7 @@ public class FireBall extends Sprite {
     boolean fireRight;
     Body b2body;
     public  boolean isDestroyed;
-    public FireBall(ScreenManagement screen, float x, float y, boolean fireRight){
+        public FireBall(ScreenManagement screen, float x, float y, boolean fireRight){
         this.fireRight = fireRight;
         this.screen = screen;
         this.world = screen.getWorld();
@@ -45,9 +45,11 @@ public class FireBall extends Sprite {
         isDestroyed=false;
     }
     public void defineFireBall(){
+        b2body=null;
         BodyDef bdef = new BodyDef();
         bdef.position.set(fireRight ? getX() + 12 /PPM : getX() - 12 /PPM, getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
+        bdef.bullet=true;
         if(!world.isLocked())
             b2body = world.createBody(bdef);
 
@@ -59,22 +61,27 @@ public class FireBall extends Sprite {
                 COINS_BIT|
                 BRICK_BIT |
                 ENERMY_BIT |
-                OBJECT_BIT;
+                PIPE_BIT;
 
         fdef.shape = shape;
         fdef.restitution = 1;
         fdef.friction = 0;
         b2body.createFixture(fdef).setUserData(this);
+        shape.dispose();
         b2body.setLinearVelocity(new Vector2(fireRight ? 2 : -2, 2.5f));
     }
     public void update(float dt){
+        if (destroyed) return;
         stateTime += dt;
         setRegion((TextureRegion) fireAnimation.getKeyFrame(stateTime, true));
         setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2);
         if((stateTime > 3 || setToDestroy) && !destroyed) {
+            b2body.setUserData(null);
             world.destroyBody(b2body);
+            b2body=null;
             destroyed = true;
             isDestroyed=true;
+            return;
         }
         if(b2body.getLinearVelocity().y > 2f)
             b2body.setLinearVelocity(b2body.getLinearVelocity().x, 2f);
@@ -88,6 +95,10 @@ public class FireBall extends Sprite {
 
     public boolean isDestroyed(){
         return destroyed;
+    }
+
+    public  void dispose(){
+
     }
 
 }

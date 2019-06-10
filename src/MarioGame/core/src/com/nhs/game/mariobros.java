@@ -6,19 +6,16 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.nhs.game.Screens.MenuScreen.MenuScreen;
 import com.nhs.game.Screens.PlayScreen.FirstScreen;
 
 public class mariobros extends Game {
 
-	private  static  mariobros __instance=null;
+//	private  static  mariobros __instance=null;
 	public SpriteBatch batch; //this things hold all of our image,textures,stuffs...
 
 	public static AssetManager manager;
 
-	public static mariobros getInstance(){
-		if (__instance==null) __instance=new mariobros();
-		return __instance;
-	}
 
 	public  SpriteBatch getBatch(){
 		return batch;
@@ -42,7 +39,7 @@ public class mariobros extends Game {
 		manager.load("audio/sounds/bigjump.wav",Sound.class);
 		manager.load("audio/sounds/stomp.wav",Sound.class);
 		manager.finishLoading();
-		setScreen(new FirstScreen(this));
+		setScreen(new MenuScreen(this));
 	}
 
 	@Override

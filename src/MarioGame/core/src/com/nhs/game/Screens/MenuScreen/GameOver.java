@@ -79,6 +79,9 @@ public class GameOver implements Screen {
 
     @Override
     public void dispose() {
+
+
         stage.dispose();
+        Gdx.app.log("Dispose","game over screen");
     }
 }

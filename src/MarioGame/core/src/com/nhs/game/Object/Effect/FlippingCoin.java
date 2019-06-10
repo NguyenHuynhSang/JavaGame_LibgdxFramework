@@ -1,5 +1,6 @@
 package com.nhs.game.Object.Effect;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -14,17 +15,23 @@ import static com.nhs.game.Global.global.NONCOLLISION_BIT;
 import static com.nhs.game.Global.global.PPM;
 
 public class FlippingCoin extends Effects {
-    private Animation coinAni;
-    private com.badlogic.gdx.utils.Array<TextureRegion> frames;
-
+    private static  Animation coinAni;
+    private static Array<TextureRegion> frames;
+    private  static  boolean Init=false;
     public FlippingCoin(ScreenManagement screen, float x, float y) {
+
         super(screen, x, y);
-        frames=new Array<TextureRegion>();
-        for (int i=0;i<4;i++)
-        {
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("flippingcoin"),i*16,0,16,16));
+        Gdx.app.log("Flipping Coin","Init");
+        if (!Init){
+            frames=new Array<TextureRegion>();
+            for (int i=0;i<4;i++)
+            {
+                frames.add(new TextureRegion(screen.getAtlas().findRegion("flippingcoin"),i*16,0,16,16));
+            }
+            coinAni=new Animation(0.1f,frames);
+            Init=true;
         }
-        coinAni=new Animation(0.1f,frames);
+        setRegion( (TextureRegion)coinAni.getKeyFrame(0));
     }
 
 
@@ -47,6 +54,7 @@ public class FlippingCoin extends Effects {
         fdef.filter.maskBits= NONCOLLISION_BIT;
         fdef.shape=shape;
         body.createFixture(fdef).setUserData(this);
+        shape.dispose();
         velocity=new Vector2(0,3.0f);
         body.setLinearVelocity(velocity);
         // body.applyLinearImpulse(new Vector2(0,3.8f),body.getWorldCenter(),true);
@@ -56,6 +64,11 @@ public class FlippingCoin extends Effects {
     @Override
     public void update(float dt) {
         super.update(dt);
+        if (isDestroyed) {
+            Gdx.app.log("destroy","running into update method of flipping coin class");
+            setRegion( (TextureRegion)coinAni.getKeyFrame(stateTimer,true));
+            return;
+        }
         if (stateTimer>0.45f) {
             setDestroy=true;
         }

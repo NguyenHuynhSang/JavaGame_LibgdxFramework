@@ -21,6 +21,9 @@ public class MapBound extends GameObject {
         fixture.setUserData(this);
         setCategoryFilter(MAPZONE_BIT);
     }
+    @Override
+    public void isNextScene(Mario mario) {
 
+    }
 
 }

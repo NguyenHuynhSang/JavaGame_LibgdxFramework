@@ -11,21 +11,25 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import static com.nhs.game.Global.global._height;
 import static com.nhs.game.Global.global._width;
 
-public class Controller {
+public class Controller implements Disposable {
 
     Viewport viewport;
     Stage stage;
     boolean upPressed, downPressed, leftPressed, rightPressed,firePressed;
+    boolean startPressed,exitPressed;
     boolean resetPress,growPress,killPress,imMortalPress,changeScreenPress,activeBodyPress;
     OrthographicCamera camera;
-    public  boolean justPress;
-    public Controller() {
+    public  boolean justPress=false;
+
+
+    public Controller(boolean isMenuScene) {
         camera = new OrthographicCamera();
         viewport = new FitViewport(_width, _height, camera);
         stage = new Stage(viewport);
@@ -85,6 +89,7 @@ public class Controller {
                 switch(keycode){
                     case Input.Keys.SPACE:
                         upPressed = false;
+                        justPress=false;
                         break;
                     case Input.Keys.DOWN:
                         downPressed = false;
@@ -135,6 +140,14 @@ public class Controller {
         });
 
         Gdx.input.setInputProcessor(stage);
+        if (isMenuScene){
+            loadControllerforMenuScreen();
+        }
+        else
+            loadControllerforPlayScreen();
+    }
+
+    private  void loadControllerforPlayScreen(){
 
 
 
@@ -185,7 +198,7 @@ public class Controller {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 rightPressed = false;
-                justPress=false;
+                //    justPress=false;
             }
         });
 
@@ -202,12 +215,12 @@ public class Controller {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 leftPressed = false;
-                justPress=false;
+                //justPress=false;
             }
         });
 
 
-        Image fireImg = new Image(new Texture("fire.png"));
+        Image fireImg = new Image(new Texture("btnfire.png"));
         fireImg.setSize(50, 50);
         fireImg.addListener(new InputListener() {
 
@@ -225,14 +238,30 @@ public class Controller {
         });
 
 
+        Image changeScreenImg = new Image(new Texture("btsm.png"));
+        changeScreenImg.setSize(50, 50);
+        changeScreenImg.addListener(new InputListener() {
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                changeScreenPress = true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                changeScreenPress = false;
+                justPress=false;
+            }
+        });
 
         Table table = new Table();
-        table.setSize(50,50);
+        table.setSize(40,40);
         table.left().bottom();
         table.pad(0,300,20,0);
         table.add();
 
-        table.add(upImg).size(upImg.getWidth()/2, upImg.getHeight()/2);
+        table.add(upImg).size(40,40);
 
 
 
@@ -241,29 +270,96 @@ public class Controller {
         table1.left().bottom();
         table1.add();
         table1.pad(0,20,10,0);
-        table1.add().size(upImg.getWidth()/2, upImg.getHeight()/2);
+        table1.add().size(40,40);
         table1.row();
-        table1.add(leftImg).size(rightImg.getWidth()/2, rightImg.getHeight()/2);
+        table1.add(leftImg).size(40,40);
         table1.add();
-        table1.add(rightImg).size(downImg.getWidth()/2, downImg.getHeight()/2);
+        table1.add(rightImg).size(40,40);
         table.row().pad(1, 1, 1, 1);
         //table.add();
 
 
 
         Table table2 = new Table();
-        table2.setSize(50,50);
+        table2.setSize(40,40);
         table2.left().bottom();
         table2.pad(0,350,40,0);
         table2.add();
-        table2.add(fireImg).size(fireImg.getWidth()/2, fireImg.getHeight()/2);
+        table2.add(fireImg).size(40,40);
+
+
+        Table table3 = new Table();
+        table3.setSize(20,20);
+        table3.left().bottom();
+        table3.pad(0,380,180,0);
+        table3.add();
+        table3.add(changeScreenImg).size(20,20);
 
 
         stage.addActor(table);
         stage.addActor(table1);
         stage.addActor(table2);
+        stage.addActor(table3);
         //stage.setDebugAll(true);
+
     }
+
+    private void loadControllerforMenuScreen(){
+
+        Image startImg = new Image(new Texture("start.png"));
+        startImg.setSize(50, 50);
+        startImg.addListener(new InputListener() {
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                startPressed = true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                startPressed = false;
+                justPress=false;
+            }
+        });
+
+        Image exitImg = new Image(new Texture("exit.png"));
+        exitImg.setSize(50, 50);
+        exitImg.addListener(new InputListener() {
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                exitPressed = true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                exitPressed = false;
+                justPress=false;
+            }
+        });
+
+        Table table2 = new Table();
+        table2.setSize(40,40);
+        table2.left().bottom();
+        table2.pad(0,80,10,0);
+        table2.add();
+        table2.add(startImg).size(40,40);
+
+
+        Table table = new Table();
+        table.setSize(40,40);
+        table.left().bottom();
+        table.pad(0,260,10,0);
+        table.add();
+        table.add(exitImg).size(40,40);
+
+        stage.addActor(table2);
+        stage.addActor(table);
+
+    }
+
     public void draw(){
         stage.draw();
     }
@@ -286,6 +382,10 @@ public class Controller {
     }
 
     public boolean isFirePressed(){return firePressed;}
+    public boolean isStartPressed(){return  startPressed;}
+    public boolean isExitPressed(){return  exitPressed;}
+
+
 
     ///Dev support key (only on computer)
 
@@ -303,6 +403,9 @@ public class Controller {
         viewport.update(width, height);
     }
 
-
+    @Override
+    public void dispose() {
+        stage.dispose();
+    }
 }
 

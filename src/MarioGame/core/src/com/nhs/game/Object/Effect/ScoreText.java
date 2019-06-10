@@ -14,17 +14,21 @@ import static com.nhs.game.Global.global.PPM;
 
 public class ScoreText extends Effects   {
 
-    private Animation scoreAni;
-    private com.badlogic.gdx.utils.Array<TextureRegion> frames;
-
+    private static Animation scoreAni;
+    private static Array<TextureRegion> frames;
+    private  static  boolean InitScore=false;
     public ScoreText(ScreenManagement screen, float x, float y) {
         super(screen, x, y);
-        frames=new Array<TextureRegion>();
-        for (int i=1;i<4;i++)
-        {
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("score"),i*16,0,16,8));
+        if (!InitScore){
+            frames=new Array<TextureRegion>();
+            for (int i=1;i<4;i++)
+            {
+                frames.add(new TextureRegion(screen.getAtlas().findRegion("score"),i*16,0,16,8));
+            }
+            scoreAni=new Animation(0.1f,frames);
+            InitScore=true;
         }
-        scoreAni=new Animation(0.1f,frames);
+        setRegion( (TextureRegion)scoreAni.getKeyFrame(0));
     }
 
     @Override
@@ -46,6 +50,7 @@ public class ScoreText extends Effects   {
         fdef.filter.maskBits= NONCOLLISION_BIT;
         fdef.shape=shape;
         body.createFixture(fdef).setUserData(this);
+        shape.dispose();
         velocity=new Vector2(0,3.0f);
         body.setLinearVelocity(velocity);
         // body.applyLinearImpulse(new Vector2(0,3.8f),body.getWorldCenter(),true);
@@ -53,6 +58,10 @@ public class ScoreText extends Effects   {
     @Override
     public void update(float dt) {
         super.update(dt);
+        if (isDestroyed) {
+            setRegion( (TextureRegion)scoreAni.getKeyFrame(stateTimer,true));
+            return;
+        }
         if (stateTimer>0.3f) {
             setDestroy=true;
         }

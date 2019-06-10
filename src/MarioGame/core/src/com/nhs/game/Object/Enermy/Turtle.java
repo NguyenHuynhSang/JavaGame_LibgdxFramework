@@ -11,6 +11,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
+import com.nhs.game.Object.Effect.EffectDef;
+import com.nhs.game.Object.Effect.ScoreText;
 import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.ScreenManagement;
 
@@ -22,7 +24,7 @@ import static com.nhs.game.Global.global.FIREBALL_BIT;
 import static com.nhs.game.Global.global.GROUND_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
 import static com.nhs.game.Global.global.NONCOLLISION_BIT;
-import static com.nhs.game.Global.global.OBJECT_BIT;
+import static com.nhs.game.Global.global.PIPE_BIT;
 import static com.nhs.game.Global.global.PPM;
 
 public class Turtle extends  Enermy {
@@ -67,7 +69,7 @@ public class Turtle extends  Enermy {
         // category để nhận biết đó là object nào
         // mask là các object và object đang xét có thể va chạm
         fdef.filter.categoryBits=ENERMY_BIT;
-        fdef.filter.maskBits= GROUND_BIT |MARIO_BIT| COINS_BIT |BRICK_BIT|OBJECT_BIT|ENERMY_BIT|FIREBALL_BIT;
+        fdef.filter.maskBits= GROUND_BIT |MARIO_BIT| COINS_BIT |BRICK_BIT| PIPE_BIT |ENERMY_BIT|FIREBALL_BIT;
 
         fdef.shape=shape;
 
@@ -89,6 +91,7 @@ public class Turtle extends  Enermy {
 
         //set mask de goi lai trong collision
         b2body.createFixture(fdef).setUserData(this);
+        shape.dispose();
         deadRotation=0;
 
 
@@ -122,23 +125,31 @@ public class Turtle extends  Enermy {
 
     @Override
     public void update(float dt) {
-        setRegion(getFrame(dt));
-        if (currentState==State.SHELL && stateTime>5){
-            currentState=State.WALKING;
-            velocity.x=1;
-        }
-        setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-8/PPM);
-        if (currentState==State.DEAD)
-        {
-            deadRotation+=2;
-            rotate(deadRotation);
-            if (stateTime>5 && !Destroyed){
-                world.destroyBody(b2body);
-                Destroyed=true;
-                eDestroyed=true;
+        if (eDestroyed) return;
+
+        else {
+            setRegion(getFrame(dt));
+            if (currentState==State.SHELL && stateTime>5){
+                currentState=State.WALKING;
+                velocity.x=1;
             }
-        }else
-        b2body.setLinearVelocity(velocity);
+            setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-8/PPM);
+            if (currentState==State.DEAD)
+            {
+                deadRotation+=2;
+                rotate(deadRotation);
+                if (stateTime>5 && !Destroyed){
+                    b2body.setUserData(null);
+                    world.destroyBody(b2body);
+                    b2body=null;
+                    Destroyed=true;
+                    eDestroyed=true;
+                    return;
+                }
+            } else
+                b2body.setLinearVelocity(velocity);
+        }
+
     }
 
     @Override
@@ -186,6 +197,8 @@ public class Turtle extends  Enermy {
 
 
     public void killed(){
+        (screen).spawnEffect(new EffectDef(new Vector2(b2body.getPosition().x,b2body.getPosition().y+16/PPM),
+                ScoreText.class));
         currentState=State.DEAD;
         Filter filter=new Filter();
         filter.maskBits=NONCOLLISION_BIT;

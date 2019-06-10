@@ -27,6 +27,7 @@ import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Object.staticObject.DeadZone;
 import com.nhs.game.Object.staticObject.MapBound;
+import com.nhs.game.Object.staticObject.Pipes;
 import com.nhs.game.Screens.PlayScreen.FirstScreen;
 import com.nhs.game.Object.staticObject.Bricks;
 import com.nhs.game.Object.staticObject.CoinBox;
@@ -34,7 +35,7 @@ import com.nhs.game.Screens.PlayScreen.SecondScreen;
 import com.nhs.game.Screens.PlayScreen.UnderGroundScreen;
 import com.nhs.game.Screens.ScreenManagement;
 
-import static com.nhs.game.Global.global.OBJECT_BIT;
+import static com.nhs.game.Global.global.PIPE_BIT;
 import static com.nhs.game.Global.global.PPM;
 import static com.nhs.game.Global.global._mapWidth;
 import static com.nhs.game.Global.global._mapWidthX2;
@@ -139,16 +140,7 @@ public class B2WorldCreator implements Disposable {
 
         //create body for pipes
         for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
-            Rectangle rec=((RectangleMapObject) object).getRectangle();
-            bdef.type=BodyDef.BodyType.StaticBody; // like bricks,ground nÃ³i chung lÃ  máº¥y object k di chuyá»ƒn Ä‘c
-            bdef.position.set((rec.getX()+rec.getWidth()/2)/PPM,(rec.getY()+rec.getHeight()/2)/PPM);
-
-            body=world.createBody(bdef);
-
-            shape.setAsBox((rec.getWidth()/2)/PPM,(rec.getHeight()/2)/PPM);
-            fdef.shape=shape;
-            fdef.filter.categoryBits=OBJECT_BIT;
-            body.createFixture(fdef);
+           new Pipes(screen,object);
         }
 
 
@@ -188,6 +180,8 @@ public class B2WorldCreator implements Disposable {
     private void getUGScreenObject(ScreenManagement screen){
 
 
+        pplant=null;
+
         int count=0;
         //create body for mapbound
         for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
@@ -224,16 +218,7 @@ public class B2WorldCreator implements Disposable {
 
         //create body for pipes
         for (MapObject object : map.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
-            Rectangle rec=((RectangleMapObject) object).getRectangle();
-            bdef.type=BodyDef.BodyType.StaticBody; // like bricks,ground nÃ³i chung lÃ  máº¥y object k di chuyá»ƒn Ä‘c
-            bdef.position.set((rec.getX()+rec.getWidth()/2)/PPM,(rec.getY()+rec.getHeight()/2)/PPM);
-
-            body=world.createBody(bdef);
-
-            shape.setAsBox((rec.getWidth()/2)/PPM,(rec.getHeight()/2)/PPM);
-            fdef.shape=shape;
-            fdef.filter.categoryBits=OBJECT_BIT;
-            body.createFixture(fdef);
+            new Pipes(screen,object);
         }
 
 
@@ -253,6 +238,7 @@ public class B2WorldCreator implements Disposable {
 
 
     private  void getSecondScreenObject(ScreenManagement screen){
+
         int count=0;
         //create body for mapbound
         for (MapObject object : map.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
@@ -272,7 +258,7 @@ public class B2WorldCreator implements Disposable {
             new DeadZone(screen,object);
         }
 
-        Gdx.app.log("First Screen","created objects from tile");
+        Gdx.app.log("Second Screen","created objects from tile");
         //get Mario position in MTile ap
         for (MapObject object : map.getLayers().get(4).getObjects().getByType(TiledMapTileMapObject.class)){ //get the coins object in tilemap
             TiledMapTileMapObject tile=((TiledMapTileMapObject)object);
@@ -311,16 +297,8 @@ public class B2WorldCreator implements Disposable {
 
         //create body for pipes
         for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)){ //get the coins object in tilemap
-            Rectangle rec=((RectangleMapObject) object).getRectangle();
-            bdef.type=BodyDef.BodyType.StaticBody; // like bricks,ground nÃ³i chung lÃ  máº¥y object k di chuyá»ƒn Ä‘c
-            bdef.position.set((rec.getX()+rec.getWidth()/2)/PPM,(rec.getY()+rec.getHeight()/2)/PPM);
 
-            body=world.createBody(bdef);
-
-            shape.setAsBox((rec.getWidth()/2)/PPM,(rec.getHeight()/2)/PPM);
-            fdef.shape=shape;
-            fdef.filter.categoryBits=OBJECT_BIT;
-            body.createFixture(fdef);
+            new Pipes(screen,object);
         }
 
 
@@ -347,7 +325,7 @@ public class B2WorldCreator implements Disposable {
 
         }
 
-
+        pplant=new Array<PirannhaPlant>();
         for (MapObject object : map.getLayers().get(11).getObjects().getByType(TiledMapTileMapObject.class)){ //get the coins object in tilemap
             TiledMapTileMapObject tile=((TiledMapTileMapObject)object);
             //  Rectangle rec=((RectangleMapObject) object).getRectangle();

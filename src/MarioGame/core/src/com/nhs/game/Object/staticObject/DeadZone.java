@@ -20,5 +20,10 @@ public class DeadZone extends GameObject {
     public void isHeadHit(Mario mario) {
        return;
     }
+    @Override
+    public void isNextScene(Mario mario) {
+
+    }
+
 }
 

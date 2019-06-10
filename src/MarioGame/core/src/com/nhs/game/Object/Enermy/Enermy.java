@@ -31,7 +31,7 @@ public abstract class Enermy extends Sprite {
     public   abstract void hitOnHead(Mario mario);
 
     public  abstract  void onEnermyHit(Enermy enermy);
-
+public  Body getB2body(){return  b2body;}
 
     public  abstract  void killEnermy();
     //đảo ngược chiều của vận tốc

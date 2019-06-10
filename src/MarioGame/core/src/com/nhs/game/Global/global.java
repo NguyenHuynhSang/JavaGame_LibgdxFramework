@@ -17,7 +17,7 @@ public class global {
     public  static final  short BRICK_BIT=4;
     public  static final  short COINS_BIT=8;
     public  static final  short DISTROYED_BIT=16 ;
-    public  static final  short OBJECT_BIT=32 ;
+    public  static final  short PIPE_BIT =32 ;
     public  static final  short ENERMY_BIT=64 ;
     public  static final  short ENERMY_HEAD_BIT=128;
     public  static final  short ITEM_BIT=256;

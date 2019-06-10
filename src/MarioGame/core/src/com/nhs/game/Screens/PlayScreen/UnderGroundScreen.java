@@ -8,10 +8,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.nhs.game.Engine.B2WorldCreator;
+import com.nhs.game.Object.Effect.Effects;
+import com.nhs.game.Object.Enermy.Enermy;
 import com.nhs.game.Object.Items.Coins;
 import com.nhs.game.Object.Items.Item;
 import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Player.Mario;
+import com.nhs.game.Screens.MenuScreen.MenuScreen;
 import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
 
@@ -45,14 +48,17 @@ public class UnderGroundScreen extends ScreenManagement {
     {
 
         devSupport();
+        if (player.isNextScene){
+            changeScreen();
+        }
 
         if (player.currentState==Mario.State.DEAD)
             return;
 
 
-        if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0)
+        if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0&&!controller.justPress)
         {
-
+            controller.justPress=true;
             player.b2body.applyLinearImpulse(new Vector2(0,3.8f),player.b2body.getWorldCenter(),true);
             if (player.isBig==true)
                 mariobros.manager.get("audio/sounds/bigjump.wav",Sound.class).play();
@@ -89,16 +95,29 @@ public class UnderGroundScreen extends ScreenManagement {
     {
         handleInput(dt);
         handleSpawningItem();
+        handleSpawningEffects();
         world.step(1/50f,6,2);
         player.Update(dt);
+
+
+
         for (Item item:items)
         {
-
+            item.update(dt);
             if (item.isDestroyed){
                 items.removeValue(item,true);
                 continue;
             }
-            item.update(dt);
+
+        }
+        for (Effects e:effects)
+        {
+            e.update(dt);
+            if (e.isDestroyed){
+                effects.removeValue(e,true);
+                continue;
+            }
+
         }
         hud.Update(dt);
         //stop cam when mario was dead
@@ -106,7 +125,6 @@ public class UnderGroundScreen extends ScreenManagement {
             gameCam.position.x=player.b2body.getPosition().x;
         gameCam.update();
         renderer.setView(gameCam);// set vi tri ve map
-
     }
 
     public void render(float delta) {
@@ -170,7 +188,7 @@ public class UnderGroundScreen extends ScreenManagement {
         {
             Gdx.app.log("[DEV]","change screen");
 
-            changeScreen();
+            game.setScreen(new MenuScreen(game));
 
             return;
 

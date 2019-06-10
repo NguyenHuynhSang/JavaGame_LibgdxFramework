@@ -61,7 +61,7 @@ public abstract class ScreenManagement implements Screen {
 
     public ScreenManagement(mariobros game) {
         this.game=game;
-        atlas=new TextureAtlas("mariobro.pack");
+        atlas=new TextureAtlas("mariobrose.pack");
         gameCam=new OrthographicCamera();
         //gamePort=new ScreenViewport(gameCam);  //Sẽ phát sinh lỗi nếu màn hình có size lớn thì Camera sẽ lớn hơn, đã fix ở dưới
         gamePort=new FitViewport(_width /PPM,_height/PPM,gameCam);
@@ -69,7 +69,7 @@ public abstract class ScreenManagement implements Screen {
         gameCam.position.set(gamePort.getWorldWidth()/2,gamePort.getWorldHeight()/2,0);
         world=new World(new Vector2(0,-10),true);// "true" is make an object sleeping
         b2dr=new Box2DDebugRenderer();
-        controller = new Controller();
+        controller = new Controller(false);
         world.setContactListener(new WorldContactListener());
 
 
@@ -116,10 +116,10 @@ public abstract class ScreenManagement implements Screen {
                 effects.add(new FlippingCoin(this,edef.position.x,edef.position.y));
             }else if (edef.type==BreakingBrick.class)
             {
-                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y,2f,2f));
-                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y,-2f,2f));
-                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y,2f,-2f));
-                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y,-2f,-2f));
+                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y+18/PPM,2f,2f));
+                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y+18/PPM,-2f,2f));
+                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y+18/PPM,2f,-2f));
+                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y+18/PPM,-2f,-2f));
             } else if (edef.type==ScoreText.class)
             {
                 effects.add(new ScoreText(this,edef.position.x+15/PPM,edef.position.y));
@@ -170,11 +170,6 @@ public abstract class ScreenManagement implements Screen {
     @Override
     public  void dispose(){
 
-        Gdx.app.log("Dispose","game");
-        map.dispose();
-        renderer.dispose();
-        world.dispose();
-        b2dr.dispose();
-        hud.dispose();
+
     }
 }

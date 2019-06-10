@@ -50,7 +50,7 @@ public abstract class GameObject extends Sprite {
         fixture=body.createFixture(fdef);
     }
 
-
+    public  abstract  void isNextScene(Mario mario);
     public  abstract  void isHeadHit(Mario mario);
     public  void setCategoryFilter(short filternit){
         Filter filter=new Filter();

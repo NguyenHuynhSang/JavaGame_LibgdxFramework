@@ -21,6 +21,7 @@ import com.nhs.game.Object.Items.ItemDef;
 import com.nhs.game.Object.Items.Mushroom;
 import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.MenuScreen.GameOver;
+import com.nhs.game.Screens.MenuScreen.MenuScreen;
 import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
 
@@ -69,9 +70,9 @@ public class SecondScreen extends ScreenManagement {
             return;
 
 
-        if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0)
+        if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0&&!controller.justPress)
         {
-
+            controller.justPress=true;
             player.b2body.applyLinearImpulse(new Vector2(0,3.5f),player.b2body.getWorldCenter(),true);
             if (player.isBig==true)
                 mariobros.manager.get("audio/sounds/bigjump.wav",Sound.class).play();
@@ -133,33 +134,41 @@ public class SecondScreen extends ScreenManagement {
         player.Update(dt);
         for (Enermy e:listEnemies)
         {
-            if (e.eDestroyed){
-                listEnemies.removeValue(e,true);
-                Gdx.app.log("[DeleteEnermyFromArray]","liseEnemy size: %d"+listEnemies.size);
-                continue;
-            }
             e.update(dt);
-            if (e.getX()< gameCam.position.x+224/PPM)
-                e.b2body.setActive(true);
+            //   Gdx.app.log("Eneymy arr","size="+listEnemies.size);
+            if (e.eDestroyed) {
+                listEnemies.removeValue(e, true);
+            }
+
         }
+
+        for (Enermy e:listEnemies)
+        {
+            //  Gdx.app.log("Eneymy arr","size="+listEnemies.size);
+
+            if (e.getX() < gameCam.position.x + 224 / PPM)
+                e.b2body.setActive(true);
+
+        }
+
 
         for (Item item:items)
         {
-
+            item.update(dt);
             if (item.isDestroyed){
                 items.removeValue(item,true);
                 continue;
             }
-            item.update(dt);
+
         }
         for (Effects e:effects)
         {
-
+            e.update(dt);
             if (e.isDestroyed){
                 effects.removeValue(e,true);
                 continue;
             }
-            e.update(dt);
+
         }
         hud.Update(dt);
         //stop cam when mario was dead
@@ -256,7 +265,7 @@ public class SecondScreen extends ScreenManagement {
         {
             Gdx.app.log("[DEV]","change screen");
 
-            changeScreen();
+            game.setScreen(new MenuScreen(game));
 
             return;
 
@@ -267,7 +276,7 @@ public class SecondScreen extends ScreenManagement {
 
     private  void changeScreen(){
         dispose();
-        game.setScreen(new UnderGroundScreen(game));
+        game.setScreen(new FirstScreen(game));
     }
 
 

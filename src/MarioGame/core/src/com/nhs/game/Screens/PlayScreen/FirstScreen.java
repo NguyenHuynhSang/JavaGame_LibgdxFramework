@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -22,6 +25,7 @@ import com.nhs.game.Object.Items.Mushroom;
 import com.nhs.game.Screens.MenuScreen.GameOver;
 import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Engine.B2WorldCreator;
+import com.nhs.game.Screens.MenuScreen.MenuScreen;
 import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
 
@@ -37,7 +41,7 @@ public class FirstScreen extends ScreenManagement {
 
     private Mario player;
     private Array<Enermy> listEnemies;
-
+    private TiledMapTileLayer bg;
     public FirstScreen(mariobros game){
         super(game);
         mapLoader=new TmxMapLoader();
@@ -45,62 +49,16 @@ public class FirstScreen extends ScreenManagement {
         renderer=new OrthogonalTiledMapRenderer(map,1/PPM);
         creator=new B2WorldCreator(this);
 
-
+        bg=(TiledMapTileLayer)map.getLayers().get("pipebg");
         music=mariobros.manager.get("audio/music/mario_music.ogg",Music.class);
         music.setLooping(true);
         music.play();
 
         player=creator.getPlayer();
         listEnemies =creator.getEnermy();
-
     }
 
 
-    public  void spawnItem(ItemDef itemDef){
-        itemstoSpawn.add(itemDef);
-    }
-
-    public  void spawnEffect(EffectDef effectDef){
-        effectstoSpawn.add(effectDef);
-    }
-
-    public  void handleSpawningItem(){
-        if (!itemstoSpawn.isEmpty())
-        {
-            ItemDef idef=itemstoSpawn.poll();
-            if (idef.type==Mushroom.class)
-            {
-                items.add(new Mushroom(this,idef.position.x,idef.position.y));
-
-            }else if (idef.type==Flower.class)
-            {
-                items.add(new Flower(this,idef.position.x,idef.position.y));
-            } else if(idef.type==Coins.class) {
-                items.add(new Coins(this, idef.position.x, idef.position.y));
-            }
-        }
-    }
-
-
-    public  void handleSpawningEffects(){
-        if (!effectstoSpawn.isEmpty())
-        {
-            EffectDef edef=effectstoSpawn.poll();
-            if (edef.type==FlippingCoin.class)
-            {
-                effects.add(new FlippingCoin(this,edef.position.x,edef.position.y));
-            }else if (edef.type==BreakingBrick.class)
-            {
-                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y,2f,2f));
-                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y,-2f,2f));
-                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y,2f,-2f));
-                effects.add(new BreakingBrick(this,edef.position.x,edef.position.y,-2f,-2f));
-            } else if (edef.type==ScoreText.class)
-            {
-                effects.add(new ScoreText(this,edef.position.x+15/PPM,edef.position.y));
-            }
-        }
-    }
      
     public void show() {
 
@@ -111,13 +69,17 @@ public class FirstScreen extends ScreenManagement {
 
         devSupport();
 
+
+
         if (player.currentState==Mario.State.DEAD)
             return;
+        if (player.isNextScene){
+            changeScreen();
+        }
 
-
-        if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0)
+        if (controller.isUpPressed()&& player.b2body.getLinearVelocity().y==0 &&!controller.justPress)
         {
-
+            controller.justPress=true;
             player.b2body.applyLinearImpulse(new Vector2(0,3.8f),player.b2body.getWorldCenter(),true);
             if (player.isBig==true)
                  mariobros.manager.get("audio/sounds/bigjump.wav",Sound.class).play();
@@ -179,33 +141,39 @@ public class FirstScreen extends ScreenManagement {
         player.Update(dt);
         for (Enermy e:listEnemies)
         {
-            if (e.eDestroyed){
-                listEnemies.removeValue(e,true);
-                Gdx.app.log("[DeleteEnermyFromArray]","liseEnemy size: %d"+listEnemies.size);
-                continue;
-            }
             e.update(dt);
-            if (e.getX()< gameCam.position.x+224/PPM)
-                e.b2body.setActive(true);
+         //   Gdx.app.log("Eneymy arr","size="+listEnemies.size);
+            if (e.eDestroyed) {
+                listEnemies.removeValue(e, true);
+            }
+
         }
+
+        for (Enermy e:listEnemies)
+        {
+          //  Gdx.app.log("Eneymy arr","size="+listEnemies.size);
+
+            if (e.getX() < gameCam.position.x + 224 / PPM)
+                e.b2body.setActive(true);
+
+        }
+
 
         for (Item item:items)
         {
-
-            if (item.isDestroyed){
-                items.removeValue(item,true);
-                continue;
-            }
             item.update(dt);
+            if (item.isDestroyed ){
+                items.removeValue(item,true);
+            }
+
         }
         for (Effects e:effects)
         {
-
+             e.update(dt);
             if (e.isDestroyed){
                 effects.removeValue(e,true);
-                continue;
             }
-            e.update(dt);
+
         }
         hud.Update(dt);
         //stop cam when mario was dead
@@ -223,10 +191,8 @@ public class FirstScreen extends ScreenManagement {
         Update(delta);
         Gdx.gl.glClearColor(0,0,0,1); //clear the screen to black
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-
         renderer.render();
-        b2dr.render(world,gameCam.combined); // hiện boundingbox lên để kiểm tra va chạm
+     //   b2dr.render(world,gameCam.combined); // hiện boundingbox lên để kiểm tra va chạm
         //draw hud riêng vì hud k chạy theo cam world
         game.batch.setProjectionMatrix(gameCam.combined);//tell the game where the camera is in our game world
         game.batch.begin(); //open the box
@@ -246,10 +212,14 @@ public class FirstScreen extends ScreenManagement {
         for (Effects e:effects)
         {
             if (e.getX()<=gameCam.position.x-_width/2/PPM ||e.getX()>gameCam.position.x+_width/2/PPM ) continue;
+            if (e==null) Gdx.app.log("EFF","is null");
             e.draw(game.batch);
         }
 
         game.batch.end(); //close the box and draw it to the screen
+        renderer.getBatch().begin();
+        renderer.renderTileLayer(bg);
+        renderer.getBatch().end();
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
         controller.draw();
@@ -303,7 +273,7 @@ public class FirstScreen extends ScreenManagement {
         {
             Gdx.app.log("[DEV]","change screen");
             controller.justPress=true;
-            changeScreen();
+            game.setScreen(new MenuScreen(game));
             return;
 
         }
@@ -319,8 +289,9 @@ public class FirstScreen extends ScreenManagement {
 
 
 private  void changeScreen(){
-        dispose();
+
     game.setScreen(new UnderGroundScreen(game));
+  //  dispose();
 }
 
 
@@ -334,6 +305,10 @@ private  void changeScreen(){
 
 
     public void dispose() {
-
+        Gdx.app.log("Dispose","game");
+        map.dispose();
+        renderer.dispose();
+        b2dr.dispose();
+        hud.dispose();
     }
 }

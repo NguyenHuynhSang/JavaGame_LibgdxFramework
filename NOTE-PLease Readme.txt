@@ -1,0 +1,2 @@
+App menu b? l?i b?n desktop ph?i nh?n vào mép trên c?a nút m?i ch?y
+b?n trên android không b? l?i gì

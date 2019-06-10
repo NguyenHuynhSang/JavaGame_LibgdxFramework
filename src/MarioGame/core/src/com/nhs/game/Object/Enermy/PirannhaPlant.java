@@ -11,6 +11,8 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.Array;
+import com.nhs.game.Object.Effect.EffectDef;
+import com.nhs.game.Object.Effect.ScoreText;
 import com.nhs.game.Object.Player.Mario;
 import com.nhs.game.Screens.ScreenManagement;
 import com.nhs.game.mariobros;
@@ -19,7 +21,6 @@ import com.nhs.game.mariobros;
 import static com.nhs.game.Global.global.ENERMY_BIT;
 import static com.nhs.game.Global.global.FIREBALL_BIT;
 import static com.nhs.game.Global.global.MARIO_BIT;
-import static com.nhs.game.Global.global.NONCOLLISION_BIT;
 import static com.nhs.game.Global.global.PPM;
 import static com.nhs.game.UiManager.Hud.UpdateScore;
 
@@ -27,6 +28,7 @@ public class PirannhaPlant extends  Enermy {
     private Animation growani;
     private boolean setDestroy;
     private float stateTime;
+    private Vector2 defaulPos;
     private com.badlogic.gdx.utils.Array<TextureRegion> frames;
     public PirannhaPlant(ScreenManagement screen, float x, float y) {
         super(screen, x, y);
@@ -41,10 +43,12 @@ public class PirannhaPlant extends  Enermy {
         setBounds(x,y,25/PPM,32/PPM);
         setDestroy=false;
         eDestroyed=false;
+        defaulPos=new Vector2(x,y);
     }
 
     @Override
     protected void defineEnermy() {
+
         BodyDef bdef=new BodyDef();
         bdef.position.set(getX(),getY());
         bdef.type=BodyDef.BodyType.DynamicBody;
@@ -62,42 +66,51 @@ public class PirannhaPlant extends  Enermy {
 
 
         b2body.createFixture(fdef).setUserData(this);
+        shape.dispose();
         b2body.setGravityScale(0);
-        velocity=new Vector2(0,0.4f);
+        velocity=new Vector2(0,0.3f);
         b2body.setLinearVelocity(velocity);
+
         b2body.setTransform(b2body.getPosition().x+10/PPM,b2body.getPosition().y+10/PPM,b2body.getAngle());
 
     }
 
     @Override
     public void update(float dt) {
-        stateTime+=dt;
+        if (eDestroyed) return;
+        else    {
+            stateTime+=dt;
 
-        if (setDestroy && !eDestroyed)
-        {
-            world.destroyBody(b2body);
-            eDestroyed=true;
-            stateTime=0;
-        } else if (!eDestroyed)
-        {
-            if (stateTime>1){
-
+            if (setDestroy && !eDestroyed)
+            {
+                b2body.setUserData(null);
+                world.destroyBody(b2body);
+                b2body=null;
+                eDestroyed=true;
                 stateTime=0;
+                return;
+            } else if (!eDestroyed)
+            {
+                if (b2body.getPosition().y>=defaulPos.y+getHeight()){
 
-                velocity=new Vector2(0,-b2body.getLinearVelocity().y);
-                b2body.setLinearVelocity(velocity);
+                    velocity=new Vector2(0,-b2body.getLinearVelocity().y);
+                    b2body.setLinearVelocity(velocity);
+                 //   Gdx.app.log("run up","ruuu");
+                }
+                else if (b2body.getPosition().y<=defaulPos.y-getHeight()/2)
+                {
+                    velocity=new Vector2(0,-b2body.getLinearVelocity().y);
+                    b2body.setLinearVelocity(velocity);
+                 //   Gdx.app.log("run down","ruuu");
+                }
+
+
+                setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-getHeight()/2);
+                setRegion( (TextureRegion)growani.getKeyFrame(stateTime,true));
+
             }
-            else{
-
-                velocity=new Vector2(0,b2body.getLinearVelocity().y);
-                b2body.setLinearVelocity(velocity);
-            }
-
-
-            setPosition(b2body.getPosition().x-getWidth()/2,b2body.getPosition().y-getHeight()/2);
-            setRegion( (TextureRegion)growani.getKeyFrame(stateTime,true));
-
         }
+
     }
 
 
@@ -119,11 +132,13 @@ public class PirannhaPlant extends  Enermy {
 
     @Override
     public void onEnermyHit(Enermy enermy) {
-
+        return;
     }
 
     @Override
     public void killEnermy() {
+        (screen).spawnEffect(new EffectDef(new Vector2(b2body.getPosition().x,b2body.getPosition().y+16/PPM),
+                ScoreText.class));
         setDestroy=true;
         UpdateScore(100);
         mariobros.manager.get("audio/sounds/stomp.wav",Sound.class).play();

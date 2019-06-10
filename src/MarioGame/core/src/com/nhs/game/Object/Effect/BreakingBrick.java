@@ -1,5 +1,6 @@
 package com.nhs.game.Object.Effect;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -15,14 +16,20 @@ import static com.nhs.game.Global.global.PPM;
 
 public class BreakingBrick extends Effects {
 
-    private Animation bbrickani;
-    private com.badlogic.gdx.utils.Array<TextureRegion> frames;
-
+    private static Animation bbrickani;
+    private static Array<TextureRegion> frames;
+    private  static  boolean InitBB=false;
     public BreakingBrick(ScreenManagement screen, float x, float y, float vx, float vy) {
         super(screen, x, y);
-        frames=new Array<TextureRegion>();
-        frames.add(new TextureRegion(screen.getAtlas().findRegion("particle_brick"), 0, 0, 5, 5));
-        bbrickani=new Animation(0.1f,frames);
+
+        if (!InitBB){
+            frames=new Array<TextureRegion>();
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("particle_brick"), 0, 0, 5, 5));
+            bbrickani=new Animation(0.1f,frames);
+            InitBB=true;
+            Gdx.app.log("Breaking  Brick","Init Frame ");
+        }
+        setRegion( (TextureRegion)bbrickani.getKeyFrame(0));
         velocity=new Vector2(vx,vy);
         body.setLinearVelocity(velocity);
     }
@@ -46,12 +53,16 @@ public class BreakingBrick extends Effects {
         fdef.filter.maskBits= NONCOLLISION_BIT;
         fdef.shape=shape;
         body.createFixture(fdef).setUserData(this);
-
+        shape.dispose();
 
     }
     @Override
     public void update(float dt) {
         super.update(dt);
+        if (isDestroyed){
+            setRegion( (TextureRegion)bbrickani.getKeyFrame(stateTimer,true));
+            return;
+        }
         if (stateTimer>0.45f) {
             setDestroy=true;
         }

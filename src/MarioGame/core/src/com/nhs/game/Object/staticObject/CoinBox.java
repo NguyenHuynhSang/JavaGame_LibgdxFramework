@@ -26,9 +26,7 @@ import static com.nhs.game.Global.global.PPM;
 
 public class CoinBox extends GameObject {
     private   static TiledMapTileSet tileset;
-    private   int BLANK_COIN=3042;
-
-
+    private   int BLANK_COIN=3042; //dont know why the ID equal 3042 not 117 , sometime it crash  the game
     public CoinBox(ScreenManagement screen, MapObject object)
     {
      super(screen, object);
@@ -45,9 +43,14 @@ public class CoinBox extends GameObject {
     @Override
     public void isHeadHit(Mario mario) {
 
-        Gdx.app.log("Cell","ID"+(int)getCell().getTile().getId());
-        if (getCell().getTile().getId()==BLANK_COIN)
+      //  Gdx.app.log("Cell","ID"+(int)getCell().getTile().getId());
+        if (tileset==null) return;
+        if (getCell()==null) return;
+        if (getCell().getTile()==null) return;
+        if (getCell().getTile().getId()==BLANK_COIN){
             mariobros.manager.get("audio/sounds/bump.wav",Sound.class).play();
+            return;
+        }
         else
         {
             if (object.getProperties().containsKey("mushroom"))
@@ -68,9 +71,9 @@ public class CoinBox extends GameObject {
             {
                 (screen).spawnEffect(new EffectDef(new Vector2(body.getPosition().x,body.getPosition().y+16/PPM),
                         FlippingCoin.class));
-//
-//                (screen).spawnEffect(new EffectDef(new Vector2(body.getPosition().x,body.getPosition().y+16/PPM),
-//                        ScoreText.class));
+          Gdx.app.log("Brick spawn eff","pos X="+body.getPosition().x+":posY="+body.getPosition().y);
+                (screen).spawnEffect(new EffectDef(new Vector2(body.getPosition().x,body.getPosition().y+16/PPM),
+                        ScoreText.class));
 
                 Hud.UpdateScore(500);
                 mariobros.manager.get("audio/sounds/coin.wav",Sound.class).play();
@@ -82,6 +85,10 @@ public class CoinBox extends GameObject {
 
     }
 
+    @Override
+    public void isNextScene(Mario mario) {
+
+    }
 
 
 }
