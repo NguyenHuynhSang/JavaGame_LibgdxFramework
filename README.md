@@ -35,7 +35,7 @@ Mario được mô tả là thợ sửa ống nước người Ý với chiều 
 | E             | Kill player      |    
 | F             | use fireball     |
 | H             | immortal mario   |
-| A             | change screen    |
+| A             | change scene    |
 
 ## Các Công cụ cần thiết
 ### Framework 
